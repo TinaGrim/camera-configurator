@@ -1,0 +1,9 @@
+- generic [ref=f70e3]:
+  - banner:
+    - generic: Mirage.
+  - button "Begin configuring — tap anywhere" [ref=f70e17]:
+    - generic [ref=f70e18]:
+      - paragraph [ref=f70e19]: MIRAGE · Camera Atelier
+      - heading "High afford. Pretty price, pretty quality." [level=1] [ref=f70e20]: High afford.Pretty price, pretty quality.
+      - paragraph [ref=f70e21]: From $280
+    - paragraph [ref=f70e24]: Tap anywhere to begin

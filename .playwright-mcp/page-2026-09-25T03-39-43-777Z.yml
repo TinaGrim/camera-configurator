@@ -1,0 +1,41 @@
+- generic [ref=f71e194]:
+  - banner:
+    - generic: Mirage.
+    - button "Back" [ref=f71e195]
+  - generic [ref=f71e216]:
+    - generic [ref=f71e217]:
+      - generic [ref=f71e218]:
+        - generic [ref=f71e219]:
+          - paragraph [ref=f71e220]: The order
+          - heading "Invoice" [level=2] [ref=f71e221]
+        - generic [ref=f71e222]: "#CC-20260925-1039-95"
+      - generic [ref=f71e223]:
+        - generic [ref=f71e224]:
+          - generic [ref=f71e225]:
+            - term [ref=f71e226]: Camera
+            - definition [ref=f71e227]: Aurora X7 · Matte Black
+          - generic [ref=f71e228]:
+            - generic [ref=f71e229]: ×2
+            - generic [ref=f71e230]: −15%
+            - generic [ref=f71e231]: $410.00
+        - generic [ref=f71e232]:
+          - generic [ref=f71e233]:
+            - term [ref=f71e234]: Accessory
+            - definition [ref=f71e235]: Woven Shoulder Strap
+          - generic [ref=f71e236]:
+            - generic [ref=f71e237]: ×2
+            - generic [ref=f71e238]: $29.00
+        - generic [ref=f71e239]:
+          - term [ref=f71e240]: Subtotal
+          - definition [ref=f71e241]: $878.00
+        - generic [ref=f71e242]:
+          - term [ref=f71e243]: Discount
+          - definition [ref=f71e244]: −$123.00
+        - generic [ref=f71e246]:
+          - generic [ref=f71e247]: Total
+          - generic [ref=f71e248]: $755.00
+      - button "Send to shop chat" [ref=f71e251]
+    - dialog [ref=f71e254]:
+      - heading "Check your order" [level=3] [ref=f71e259]
+      - paragraph [ref=f71e260]: Please review all your items and make sure everything is exactly to your needs.
+      - button "Got it" [active] [ref=f71e261]

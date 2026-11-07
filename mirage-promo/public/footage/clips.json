@@ -1,0 +1,38 @@
+{
+  "hero": {
+    "src": "footage/hero.webm",
+    "from": 4.5,
+    "duration": 8.26,
+    "frameRate": 30
+  },
+  "reveal": {
+    "src": "footage/reveal.webm",
+    "from": 3.375,
+    "duration": 12.665,
+    "frameRate": 30
+  },
+  "browse": {
+    "src": "footage/browse.webm",
+    "from": 4.708,
+    "duration": 17.092,
+    "frameRate": 30
+  },
+  "kit": {
+    "src": "footage/kit.webm",
+    "from": 8.333,
+    "duration": 15.427,
+    "frameRate": 30
+  },
+  "review": {
+    "src": "footage/review.webm",
+    "from": 17.042,
+    "duration": 8.238,
+    "frameRate": 30
+  },
+  "sent": {
+    "src": "footage/sent.webm",
+    "from": 19.542,
+    "duration": 10.938,
+    "frameRate": 30
+  }
+}

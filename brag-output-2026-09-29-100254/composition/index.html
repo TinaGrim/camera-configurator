@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, height=1080">
+    <title>MIRAGE — High afford.</title>
+    <link rel="stylesheet" href="./assets/composition.css">
+    <style>
+      /* Local font files. Declared here rather than in a linked stylesheet so
+         the renderer resolves Fraunces instead of falling back to a generic
+         serif. Each family ships one variable woff2. */
+      @font-face {
+        font-family: 'Fraunces';
+        font-style: normal;
+        font-weight: 400 700;
+        font-display: block;
+        src: url('./assets/fonts/fraunces-latin.woff2') format('woff2');
+      }
+      @font-face {
+        font-family: 'Fraunces';
+        font-style: italic;
+        font-weight: 400 700;
+        font-display: block;
+        src: url('./assets/fonts/fraunces-italic-latin.woff2') format('woff2');
+      }
+      @font-face {
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 100 900;
+        font-display: block;
+        src: url('./assets/fonts/inter-latin.woff2') format('woff2');
+      }
+    </style>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "./assets/three/three.module.js"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="22.4" data-width="1920" data-height="1080">
+      <canvas id="stage-canvas"></canvas>
+      <div id="stage-scrim"></div>
+
+      <div id="ui">
+        <!-- Scene 1 — hero -->
+        <div id="hero-layer">
+          <div id="hero-inner">
+            <p id="eyebrow">MIRAGE · Camera Atelier</p>
+            <h1 id="headline">High afford.</h1>
+            <p id="sub" data-layout-allow-overlap="">Pretty price, pretty quality.</p>
+            <div id="price-lock">
+              <span class="rule"></span>
+              <span id="price-lock-text">From $280</span>
+              <span class="rule"></span>
+            </div>
+            <p id="tap-hint" data-layout-allow-overflow="">Tap <span id="tap-anywhere">anywhere</span> to begin</p>
+            <div id="tap-ripple"></div>
+          </div>
+        </div>
+
+        <!-- Scenes 2-4 — config rail -->
+        <nav id="rail">
+          <ol>
+            <li><span class="dot"></span><span class="label">Stage</span></li>
+            <li><span class="dot"></span><span class="label">Camera</span></li>
+            <li><span class="dot"></span><span class="label">Kit</span></li>
+            <li><span class="dot"></span><span class="label">Review</span></li>
+            <li><span class="dot"></span><span class="label">Sent</span></li>
+          </ol>
+        </nav>
+
+        <!-- Scene 2 — product card + spec pill -->
+        <div id="product-card">
+          <p class="label">The body</p>
+          <h2>Aurora X7</h2>
+          <p class="finish">Matte Black</p>
+          <div class="price-row">
+            <span id="price-main">$410.00</span>
+            <span class="off">−15%</span>
+          </div>
+        </div>
+        <div id="spec-pill">24MP Full-Frame Sensor</div>
+
+        <!-- Scene 3 — simulated cursor + kit chips -->
+        <div id="cursor">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M4 2.5 L19.2 11.4 L12.3 12.6 L9.6 19.4 Z" fill="#f4f1ea" stroke="#0a0a0c" stroke-width="1.3" stroke-linejoin="round" />
+          </svg>
+        </div>
+        <div id="kit-chips">
+          <div class="chip" id="chip-strap">
+            <span class="check"></span>Woven Shoulder Strap<b>$29</b>
+          </div>
+          <div class="chip" id="chip-cap">
+            <span class="check"></span>Locking Lens Cap<b>$12</b>
+          </div>
+        </div>
+
+        <!-- Scene 4 — invoice -->
+        <div id="invoice">
+          <p class="inv-head">Your build</p>
+          <div class="row" id="inv-cam">
+            <span class="name">Aurora X7</span><span class="meta">Matte Black</span><span class="amt">$410.00</span>
+          </div>
+          <div class="row" id="inv-strap">
+            <span class="name">Woven Shoulder Strap</span><span class="amt">$29.00</span>
+          </div>
+          <div class="row" id="inv-cap">
+            <span class="name">Locking Lens Cap</span><span class="amt">$12.00</span>
+          </div>
+          <div class="row sub" id="inv-sub">
+            <span class="name">Subtotal</span><span class="amt">$451.00</span>
+          </div>
+          <div class="row disc" id="inv-disc">
+            <span class="name">Launch discount</span><span class="amt">−$61.50</span>
+          </div>
+          <div id="inv-rule"></div>
+          <div class="row total" id="inv-total">
+            <span class="name">Total</span><span class="amt">$389.50</span>
+          </div>
+          <button id="cta">
+            <span id="cta-idle" data-layout-allow-overlap="">Send to shop chat</span>
+            <span id="cta-busy" data-layout-allow-overlap=""><span class="spinner"></span>Opening Telegram…</span>
+          </button>
+        </div>
+
+        <!-- Scene 5 — handoff, then the closing lockup -->
+        <div id="handoff" data-layout-allow-overlap="" data-layout-allow-occlusion="">
+          <div id="check-ring">
+            <span class="halo"></span>
+            <svg viewBox="0 0 104 104">
+              <circle class="ring" cx="52" cy="52" r="50" />
+              <path class="tick" d="M31 53 L45 67 L74 37" />
+            </svg>
+          </div>
+          <h2 id="order-ready" data-layout-allow-overlap="" data-layout-allow-occlusion="">Order <em data-layout-allow-overlap="" data-layout-allow-occlusion="">ready</em></h2>
+        </div>
+        <div id="lockup" data-layout-allow-overlap="">
+          <span class="rule"></span>
+          <h1 id="lockup-word"><span class="ch">M</span><span class="ch">I</span><span class="ch">R</span><span class="ch">A</span><span class="ch">G</span><span class="ch">E</span><span class="ch">.</span></h1>
+          <span class="rule"></span>
+          <p id="punchline" data-layout-allow-overlap="">No spreadsheet required.</p>
+        </div>
+      </div>
+
+      <div id="vignette"></div>
+      <div id="grain"></div>
+
+      <!-- Music bed. Stopped at 20.6s so the punchline lands dry. -->
+      <audio
+        id="bg-music"
+        data-start="0"
+        data-duration="20.6"
+        data-track-index="10"
+        data-volume="0.32"
+        src="assets/music/happy-beats-business-moves-vol-11-by-ende-dot-app.mp3"
+      ></audio>
+      <!-- Six sparse cues. No sound on the invoice rows or the punchline. -->
+      <audio id="sfx-tap" data-start="3.35" data-duration="0.06" data-track-index="11" data-volume="0.45" src="assets/sfx/ui/mouseclick1.ogg"></audio>
+      <audio id="sfx-strap" data-start="8.96" data-duration="0.06" data-track-index="12" data-volume="0.6" src="assets/sfx/ui/mouseclick1.ogg"></audio>
+      <audio id="sfx-lenscap" data-start="9.5" data-duration="0.06" data-track-index="13" data-volume="0.55" src="assets/sfx/ui/mouseclick1.ogg"></audio>
+      <audio id="sfx-invoice" data-start="12.65" data-duration="0.11" data-track-index="14" data-volume="0.5" src="assets/sfx/interface/drop_001.ogg"></audio>
+      <audio id="sfx-total" data-start="17.91" data-duration="0.12" data-track-index="15" data-volume="0.5" src="assets/sfx/interface/bong_001.ogg"></audio>
+      <audio id="sfx-resolve" data-start="19.4" data-duration="0.18" data-track-index="16" data-volume="0.5" src="assets/sfx/impact/impactSoft_medium_001.ogg"></audio>
+    </div>
+
+    <script src="./assets/vendor/gsap.min.js"></script>
+    <script>
+      /* ------------------------------------------------------------------
+         MIRAGE launch film — 22.4s, 1920x1080. A pure function of composition
+         time: every animated property enters and leaves via fromTo, so a seek
+         to any t rebuilds the exact frame. The 3D stage is a separate
+         seek-driven module; nothing here reads wall-clock time.
+      ------------------------------------------------------------------ */
+      const money = (n) => '$' + n.toFixed(2);
+      const priceEl = document.getElementById('price-main');
+
+      const railItems = Array.from(document.querySelectorAll('#rail li'));
+      const scrim = document.getElementById('stage-scrim');
+      const card = document.getElementById('product-card');
+      const pill = document.getElementById('spec-pill');
+      const cursor = document.getElementById('cursor');
+      const invoice = document.getElementById('invoice');
+      const handoff = document.getElementById('handoff');
+      const cta = document.getElementById('cta');
+      const rail = document.getElementById('rail');
+
+      const DIM = '#8b8b93';
+      const BRIGHT = '#f4f1ea';
+      const GOLD = '#e2b877';
+      const DOT_OFF = 'rgba(0,0,0,0)';
+
+      /* The running price is a pure function of time, not a tweened shared
+         object. Three separate fromTo()s on one object would each re-apply
+         their own "from" on every seek, so a later seek would land on a stale
+         value. Price is the only counter in the film, so it is cheaper to
+         derive it directly — and it makes any seek exact. */
+      const PRICE_STOPS = [
+        [5.85, 6.45, 410.0, 348.5, 'inOut'], // launch discount
+        [8.96, 9.3, 348.5, 377.5, 'out'], // + strap
+        [9.5, 9.84, 377.5, 389.5, 'out'], // + lens cap
+      ];
+      const easeInOut = (p) => (p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2);
+      const easeOut = (p) => 1 - Math.pow(1 - p, 2);
+
+      function priceAt(t) {
+        let v = 410.0;
+        for (const [a, b, from, to, kind] of PRICE_STOPS) {
+          if (t <= a) break;
+          const p = Math.min(1, (t - a) / (b - a));
+          v = from + (to - from) * (kind === 'inOut' ? easeInOut(p) : easeOut(p));
+        }
+        return v;
+      }
+
+      const tl = gsap.timeline({ paused: true });
+      tl.eventCallback('onUpdate', () => {
+        priceEl.textContent = money(priceAt(tl.time()));
+      });
+      /* seek() suppresses timeline callbacks, so the render path is driven
+         from the same hf-seek event the 3D stage listens to. Both write the
+         same pure function of time, so preview and render always agree. */
+      window.addEventListener('hf-seek', (e) => {
+        priceEl.textContent = money(priceAt(e.detail.time));
+      });
+
+      /* Rail state is a colour + scale change per step, expressed as tweens
+         rather than class toggles so any seek rebuilds it exactly. */
+      function stepTo(from, to, at) {
+        const aDot = railItems[from].querySelector('.dot');
+        const bDot = railItems[to].querySelector('.dot');
+        const aLabel = railItems[from].querySelector('.label');
+        const bLabel = railItems[to].querySelector('.label');
+        tl.fromTo(aLabel, { color: BRIGHT }, { color: DIM, duration: 0.3, ease: 'power2.out', overwrite: 'auto', immediateRender: false }, at);
+        tl.fromTo(aDot, { backgroundColor: GOLD, borderColor: GOLD }, { backgroundColor: DOT_OFF, borderColor: DIM, duration: 0.3, ease: 'power2.out', overwrite: 'auto', immediateRender: false }, at);
+        tl.fromTo(bLabel, { color: DIM }, { color: BRIGHT, duration: 0.3, ease: 'power2.out', overwrite: 'auto', immediateRender: false }, at);
+        tl.fromTo(bDot, { backgroundColor: DOT_OFF, borderColor: DIM }, { backgroundColor: GOLD, borderColor: GOLD, duration: 0.3, ease: 'power2.out', overwrite: 'auto', immediateRender: false }, at);
+        tl.fromTo(bDot, { scale: 0.8 }, { scale: 1, duration: 0.34, ease: 'back.out(2.4)', overwrite: 'auto', immediateRender: false }, at);
+      }
+
+      /* ================= Scene 1 — Tap anywhere to begin ================= */
+
+      tl.fromTo('#eyebrow', { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, 0.2);
+
+      // slams in, then settles
+      tl.fromTo('#headline', { opacity: 0, scale: 1.16 }, { opacity: 1, scale: 1, duration: 0.28, ease: 'power4.out' }, 0.4);
+      tl.fromTo('#headline', { scale: 1 }, { scale: 0.996, duration: 0.4, ease: 'power2.out', immediateRender: false }, 0.7);
+      tl.fromTo('#headline', { scale: 0.996 }, { scale: 1, duration: 0.3, ease: 'power2.inOut', immediateRender: false }, 1.12);
+
+      tl.fromTo('#sub', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.3, ease: 'power3.out' }, 0.8);
+      tl.fromTo('#price-lock .rule', { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 0.6, ease: 'power3.out' }, 1.2);
+      tl.fromTo('#price-lock-text', { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.4, ease: 'power3.out' }, 1.32);
+      tl.fromTo('#tap-hint', { opacity: 0, y: 10 }, { opacity: 0.58, y: 0, duration: 0.5, ease: 'power2.out' }, 1.6);
+
+      tl.fromTo('#tap-ripple', { opacity: 0, scale: 0.3 }, { opacity: 0.45, scale: 0.62, duration: 0.16, ease: 'power2.out' }, 3.35);
+      tl.fromTo('#tap-ripple', { opacity: 0.45, scale: 0.62 }, { opacity: 0, scale: 2.6, duration: 0.5, ease: 'power2.out', immediateRender: false }, 3.53);
+      tl.fromTo('#tap-anywhere', { color: BRIGHT }, { color: GOLD, duration: 0.3, ease: 'power2.out' }, 3.35);
+
+      // The push-through: hero type flies past the lens into the stage.
+      // The hero layer is already opaque, so the scrim is not needed here.
+      tl.fromTo('#hero-layer', { scale: 1, opacity: 1 }, { scale: 3.4, opacity: 0, duration: 0.55, ease: 'power3.in' }, 3.7);
+
+      /* ================= Scene 2 — The stage ================= */
+
+      tl.fromTo(card, { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: 0.5, ease: 'power3.out' }, 5.1);
+      tl.fromTo(pill, { opacity: 0, y: -24 }, { opacity: 1, y: 0, duration: 0.4, ease: 'power3.out' }, 5.45);
+      tl.fromTo(rail, { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.45, ease: 'power3.out' }, 4.75);
+      stepTo(0, 1, 4.75);
+
+      // The price rolls 410.00 -> 348.50 across 5.85-6.45, handled by priceAt().
+      /* ================= Scene 3 — The kit snaps on ================= */
+
+      stepTo(1, 2, 7.6);
+
+      // Cursor travels in from off-stage, clicks each chip, then leaves.
+      tl.fromTo(cursor, { opacity: 0, x: 2500, y: 300 }, { opacity: 1, duration: 0.2 }, 8.1);
+      tl.fromTo(cursor, { x: 2500, y: 300 }, { x: 470, y: 900, duration: 0.62, ease: 'power2.inOut', immediateRender: false }, 8.32);
+      tl.fromTo(cursor, { scale: 1 }, { scale: 0.82, duration: 0.09, ease: 'power2.out', immediateRender: false }, 8.9);
+      tl.fromTo(cursor, { scale: 0.82 }, { scale: 1, duration: 0.16, ease: 'power2.out', immediateRender: false }, 9.0);
+      tl.fromTo(cursor, { x: 470, y: 900 }, { x: 470, y: 940, duration: 0.5, ease: 'power2.inOut', immediateRender: false }, 9.02);
+      tl.fromTo(cursor, { scale: 1 }, { scale: 0.82, duration: 0.09, ease: 'power2.out', immediateRender: false }, 9.44);
+      tl.fromTo(cursor, { scale: 0.82 }, { scale: 1, duration: 0.16, ease: 'power2.out', immediateRender: false }, 9.54);
+      tl.fromTo(cursor, { opacity: 1, x: 470, y: 940 }, { opacity: 0, x: 2500, y: 940, duration: 0.5, ease: 'power2.in', immediateRender: false }, 9.7);
+
+
+      tl.fromTo('#chip-strap', { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.32, ease: 'power3.out' }, 10.25);
+      tl.fromTo('#chip-cap', { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.32, ease: 'power3.out' }, 10.38);
+
+      /* ================= Scene 4 — The invoice ================= */
+
+      // The stage dims back for the invoice, exactly like the product's dimCanvas.
+      tl.fromTo(scrim, { opacity: 0 }, { opacity: 0.84, duration: 0.4, ease: 'power2.inOut', immediateRender: false }, 12.1);
+      // The kit panel is a Kit-step element; it clears as Review takes over.
+      tl.fromTo(['#chip-strap', '#chip-cap'], { opacity: 1, y: 0 }, { opacity: 0, y: 12, duration: 0.3, ease: 'power2.in', stagger: 0.04, immediateRender: false }, 12.5);
+      stepTo(2, 3, 12.65);
+
+      tl.fromTo(invoice, { opacity: 0, y: 80 }, { opacity: 1, y: 0, duration: 0.55, ease: 'back.out(1.2)' }, 12.65);
+      tl.fromTo('#invoice .inv-head', { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' }, 12.8);
+
+      // Rows land on the beat grid — 13.18 / 14.22 / 15.28 / 16.34, every other beat.
+      const ROWS = [['#inv-cam', 13.18], ['#inv-strap', 14.22], ['#inv-cap', 15.28], ['#inv-sub', 16.34]];
+      for (const [sel, at] of ROWS) tl.fromTo(sel, { opacity: 0, x: -18 }, { opacity: 1, x: 0, duration: 0.34, ease: 'power3.out' }, at);
+
+      tl.fromTo('#inv-disc', { opacity: 0, x: -18 }, { opacity: 1, x: 0, duration: 0.34, ease: 'power3.out' }, 16.7);
+      tl.fromTo('#inv-rule', { scaleX: 0 }, { scaleX: 1, duration: 0.45, ease: 'power3.inOut' }, 16.95);
+
+      // The total is the last thing to arrive, on its own locked beat.
+      tl.fromTo('#inv-total', { opacity: 0, scale: 1.18, x: 26 }, { opacity: 1, scale: 1, x: 0, duration: 0.42, ease: 'power3.out' }, 17.91);
+      tl.fromTo(cta, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.34, ease: 'power3.out' }, 17.95);
+
+      /* ================= Scene 5 — Order ready ================= */
+
+      tl.fromTo(card, { opacity: 1, x: 0 }, { opacity: 0, x: -40, duration: 0.4, ease: 'power2.in', immediateRender: false }, 12.65);
+      tl.fromTo(pill, { opacity: 1, y: 0 }, { opacity: 0, y: -20, duration: 0.35, ease: 'power2.in', immediateRender: false }, 12.65);
+
+      tl.fromTo(cta, { scale: 1 }, { scale: 0.97, duration: 0.08, ease: 'power2.out', immediateRender: false }, 18.65);
+      tl.fromTo(cta, { scale: 0.97 }, { scale: 1, duration: 0.14, ease: 'power2.out', immediateRender: false }, 18.75);
+      tl.fromTo(cta, { backgroundColor: GOLD }, { backgroundColor: BRIGHT, duration: 0.3, ease: 'power2.out', immediateRender: false }, 18.9);
+      tl.fromTo('#cta-idle', { opacity: 1 }, { opacity: 0, duration: 0.14, ease: 'power2.in', immediateRender: false }, 18.9);
+      tl.fromTo('#cta-busy', { opacity: 0 }, { opacity: 1, duration: 0.2, ease: 'power2.out', immediateRender: false }, 18.94);
+
+      // The card clears to the handoff state.
+      tl.fromTo(['#inv-cam', '#inv-strap', '#inv-cap', '#inv-sub', '#inv-disc', '#inv-rule', '#inv-total', '.inv-head'], { opacity: 1, y: 0 }, { opacity: 0, y: -12, duration: 0.3, ease: 'power2.in', stagger: 0.03, immediateRender: false }, 19.2);
+      tl.fromTo(cta, { opacity: 1, y: 0 }, { opacity: 0, y: -8, duration: 0.25, ease: 'power2.in', immediateRender: false }, 19.2);
+      // The rail stays lit on "Sent" through the ending — it is the confirmation.
+      stepTo(3, 4, 18.9);
+
+      /* Each of these has exactly one tween, so immediateRender gives it a
+         correct hidden baseline instead of leaving it at CSS opacity 1. */
+      tl.fromTo('#check-ring .halo', { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.5, ease: 'power3.out' }, 19.4);
+      tl.fromTo('#check-ring', { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.45, ease: 'back.out(1.8)' }, 19.4);
+      tl.fromTo('#check-ring .tick', { strokeDashoffset: 48 }, { strokeDashoffset: 0, duration: 0.4, ease: 'power2.out', immediateRender: false }, 19.55);
+      tl.fromTo('#order-ready', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, 19.55);
+      tl.fromTo(handoff, { opacity: 1, y: 0 }, { opacity: 0, y: -14, duration: 0.35, ease: 'power2.inOut', immediateRender: false }, 20.0);
+
+      // The card fades and the film closes on the brand.
+      tl.fromTo(invoice, { opacity: 1, scale: 1 }, { opacity: 0, scale: 1.03, duration: 0.35, ease: 'power2.inOut', immediateRender: false }, 20.0);
+      tl.fromTo('#lockup .rule', { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 0.5, ease: 'power3.out', stagger: 0.06 }, 20.1);
+      tl.fromTo('#lockup-word', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out' }, 20.14);
+      // Per-glyph x carries the spread — letterSpacing is a layout property
+      // and would snap under seek-by-frame capture.
+      tl.fromTo('#lockup-word .ch', { x: (i) => (i - 3) * 34 }, { x: 0, duration: 0.6, ease: 'power3.out', stagger: { each: 0.03, from: 'center' } }, 20.14);
+      tl.fromTo('#punchline', { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.25, ease: 'power2.out' }, 20.7);
+
+      tl.fromTo('#root', { opacity: 1 }, { opacity: 0, duration: 0.3, ease: 'power2.inOut' }, 22.1);
+
+      /* The counter must read correctly before the first seek. */
+      priceEl.textContent = money(priceAt(0));
+
+      window.__timelines['main'] = tl;
+      tl.seek(0);
+    </script>
+    <script type="module" src="./assets/stage.js"></script>
+  </body>
+</html>

@@ -1,0 +1,77 @@
+- generic [ref=f207e3]:
+  - banner:
+    - generic: Mirage.
+    - button "Back" [ref=f207e170]
+  - navigation "Progress" [ref=f207e4]:
+    - generic [ref=f207e7]:
+      - generic [ref=f207e8]: Stage
+      - generic [ref=f207e12]: Camera
+      - generic [ref=f207e16]: Kit
+      - generic [ref=f207e20]: Review
+      - generic [ref=f207e24]: Sent
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - paragraph: The body
+          - heading "Aurora X7" [level=2]
+          - paragraph: Matte Black
+        - button "Back" [ref=f207e115]
+      - button "24MP Full-Frame Sensor" [ref=f207e119]
+    - generic:
+      - generic:
+        - generic [ref=f207e125]:
+          - generic [ref=f207e126]:
+            - generic [ref=f207e127]: $348.50
+            - generic [ref=f207e133]: "1"
+          - generic [ref=f207e134]:
+            - generic [ref=f207e135]: $410.00
+            - generic [ref=f207e136]: You save $61.50
+        - tablist "Camera models" [ref=f207e177]:
+          - tab "Aurora X7 Matte Black" [selected] [ref=f207e178] [cursor=pointer]:
+            - generic [ref=f207e179]:
+              - generic [ref=f207e180]: −15%
+              - generic [ref=f207e181]: ×1
+            - generic [ref=f207e182]: "01"
+            - generic [ref=f207e183]: $410.00
+          - tab "Vela Pro Gunmetal" [ref=f207e185] [cursor=pointer]:
+            - generic [ref=f207e186]: −10%
+            - generic [ref=f207e188]: "02"
+            - generic [ref=f207e189]: $460.00
+          - tab "Drift Mini Charcoal" [ref=f207e191] [cursor=pointer]:
+            - generic [ref=f207e192]: −15%
+            - generic [ref=f207e194]: "03"
+            - generic [ref=f207e195]: $280.00
+          - tab "Nova Lite Sand" [ref=f207e197] [cursor=pointer]:
+            - generic [ref=f207e198]: "04"
+            - generic [ref=f207e199]: $199.00
+        - generic [ref=f207e156]:
+          - generic [ref=f207e163]:
+            - button "Decrease quantity" [ref=f207e164]
+            - generic [ref=f207e166]: "1"
+            - button "Increase quantity" [ref=f207e167]
+          - button "Continue" [active] [ref=f207e158]
+  - generic [ref=f207e203]:
+    - generic [ref=f207e204]:
+      - generic [ref=f207e205]:
+        - paragraph [ref=f207e206]: The order
+        - heading "Invoice" [level=2] [ref=f207e207]
+      - generic [ref=f207e208]: "#CC-20260925-2209-27"
+    - generic [ref=f207e209]:
+      - generic [ref=f207e210]:
+        - generic [ref=f207e211]:
+          - term [ref=f207e212]: Camera
+          - definition [ref=f207e213]: Aurora X7 · Matte Black
+        - generic [ref=f207e214]:
+          - generic [ref=f207e215]: −15%
+          - generic [ref=f207e216]: $410.00
+      - generic [ref=f207e217]:
+        - term [ref=f207e218]: Subtotal
+        - definition [ref=f207e219]: $410.00
+      - generic [ref=f207e220]:
+        - term [ref=f207e221]: Discount
+        - definition [ref=f207e222]: −$61.50
+      - generic [ref=f207e224]:
+        - generic [ref=f207e225]: Total
+        - generic [ref=f207e226]: $348.50
+    - button "Send to shop chat" [ref=f207e229]

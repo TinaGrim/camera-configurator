@@ -1,0 +1,35 @@
+- generic [ref=f207e3]:
+  - banner:
+    - generic: Mirage.
+    - button "Back" [ref=f207e170]
+  - navigation "Progress" [ref=f207e4]:
+    - generic [ref=f207e7]:
+      - generic [ref=f207e8]: Stage
+      - generic [ref=f207e12]: Camera
+      - generic [ref=f207e16]: Kit
+      - generic [ref=f207e20]: Review
+      - generic [ref=f207e24]: Sent
+  - generic [ref=f207e203]:
+    - generic [ref=f207e204]:
+      - generic [ref=f207e205]:
+        - paragraph [ref=f207e206]: The order
+        - heading "Invoice" [level=2] [ref=f207e207]
+      - generic [ref=f207e208]: "#CC-20260925-2209-27"
+    - generic [ref=f207e209]:
+      - generic [ref=f207e210]:
+        - generic [ref=f207e211]:
+          - term [ref=f207e212]: Camera
+          - definition [ref=f207e213]: Aurora X7 · Matte Black
+        - generic [ref=f207e214]:
+          - generic [ref=f207e215]: −15%
+          - generic [ref=f207e216]: $410.00
+      - generic [ref=f207e217]:
+        - term [ref=f207e218]: Subtotal
+        - definition [ref=f207e219]: $410.00
+      - generic [ref=f207e220]:
+        - term [ref=f207e221]: Discount
+        - definition [ref=f207e222]: −$61.50
+      - generic [ref=f207e224]:
+        - generic [ref=f207e225]: Total
+        - generic [ref=f207e226]: $348.50
+    - button "Send to shop chat" [ref=f207e229]

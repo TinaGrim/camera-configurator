@@ -1,0 +1,15 @@
+- generic [ref=f77e3]:
+  - banner:
+    - generic: Mirage.
+  - navigation "Progress" [ref=f77e4]:
+    - generic [ref=f77e6]: Stage
+    - generic [ref=f77e10]: Camera
+    - generic [ref=f77e14]: Kit
+    - generic [ref=f77e18]: Review
+    - generic [ref=f77e22]: Sent
+  - generic [ref=f77e102]:
+    - heading "Order ready" [level=2] [ref=f77e107]
+    - paragraph [ref=f77e108]: Thank for your order. We'll shipping your order soon.
+    - button "Open the shop chat" [ref=f77e110]
+    - button "Back to home" [ref=f77e111]
+    - generic [ref=f77e112]: MIRAGE

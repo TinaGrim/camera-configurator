@@ -1,0 +1,44 @@
+- generic [ref=f73e3]:
+  - banner:
+    - generic: Mirage.
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - paragraph: The body
+          - heading "Aurora X7" [level=2]
+          - paragraph: Matte Black
+        - button "Back" [ref=f73e30]
+      - button "24MP Full-Frame Sensor" [ref=f73e34]
+    - generic:
+      - generic:
+        - generic [ref=f73e41]:
+          - generic [ref=f73e42]:
+            - generic [ref=f73e43]: Your price
+            - generic [ref=f73e44]: −15%
+          - generic [ref=f73e45]: $348.50
+          - generic [ref=f73e47]:
+            - generic [ref=f73e48]: $410.00
+            - generic [ref=f73e49]: You save $61.50
+        - tablist "Camera models" [ref=f73e51]:
+          - tab "Aurora X7 Matte Black" [selected] [ref=f73e52] [cursor=pointer]:
+            - generic [ref=f73e54]: −15%
+            - generic [ref=f73e56]: "01"
+            - generic [ref=f73e57]: $410.00
+          - tab "Vela Pro Gunmetal" [ref=f73e59] [cursor=pointer]:
+            - generic [ref=f73e60]: −10%
+            - generic [ref=f73e62]: "02"
+            - generic [ref=f73e63]: $460.00
+          - tab "Drift Mini Charcoal" [ref=f73e65] [cursor=pointer]:
+            - generic [ref=f73e66]: −15%
+            - generic [ref=f73e68]: "03"
+            - generic [ref=f73e69]: $280.00
+          - tab "Nova Lite Sand" [ref=f73e71] [cursor=pointer]:
+            - generic [ref=f73e72]: "04"
+            - generic [ref=f73e73]: $199.00
+        - generic [ref=f73e75]:
+          - generic [ref=f73e76]:
+            - button "Decrease quantity" [disabled] [ref=f73e77]
+            - generic [ref=f73e79]: "1"
+            - button "Increase quantity" [ref=f73e80]
+          - button "Continue" [ref=f73e84]

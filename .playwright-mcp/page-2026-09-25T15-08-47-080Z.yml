@@ -1,0 +1,37 @@
+- generic [ref=f207e3]:
+  - banner:
+    - generic: Mirage.
+  - navigation "Progress" [ref=f207e4]:
+    - generic [ref=f207e7]:
+      - generic [ref=f207e8]: Stage
+      - generic [ref=f207e12]: Camera
+      - generic [ref=f207e16]: Kit
+      - generic [ref=f207e20]: Review
+      - generic [ref=f207e24]: Sent
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - paragraph: Stage
+          - paragraph: Make it yours — pick your extras
+        - button "Back" [ref=f207e115]
+      - button "24MP Full-Frame Sensor" [ref=f207e119]
+    - generic:
+      - generic:
+        - generic [ref=f207e125]:
+          - generic [ref=f207e126]:
+            - generic [ref=f207e127]: $348.50
+            - generic [ref=f207e133]: "1"
+          - generic [ref=f207e134]:
+            - generic [ref=f207e135]: $410.00
+            - generic [ref=f207e136]: You save $61.50
+        - generic [ref=f207e139]:
+          - button "Leather Wrist Keychain" [ref=f207e140] [cursor=pointer]:
+            - generic [ref=f207e142]: $19.00
+          - button "Locking Lens Cap" [ref=f207e144] [cursor=pointer]:
+            - generic [ref=f207e146]: $12.00
+          - button "Woven Shoulder Strap" [ref=f207e148] [cursor=pointer]:
+            - generic [ref=f207e150]: $29.00
+          - button "Vintage Leather Backpack" [ref=f207e152] [cursor=pointer]:
+            - generic [ref=f207e154]: $149.00
+        - button "Continue" [ref=f207e158]

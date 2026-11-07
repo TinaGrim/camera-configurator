@@ -1,0 +1,34 @@
+- generic [ref=f74e3]:
+  - banner:
+    - generic: Mirage.
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - paragraph: Your kit
+          - heading "Woven Shoulder Strap" [level=2]
+          - paragraph: 1 item selected
+          - generic: ×2
+        - button "Back" [ref=f74e98]
+      - button "33MP Stacked CMOS · 8K" [ref=f74e102]
+    - generic:
+      - generic:
+        - generic [ref=f74e109]:
+          - generic [ref=f74e110]: Kit total
+          - generic [ref=f74e112]: $40.44
+          - generic [ref=f74e114]: 1 add-on picked
+        - generic [ref=f74e117]:
+          - button "Leather Wrist Keychain" [ref=f74e118] [cursor=pointer]:
+            - generic [ref=f74e123]: $19.00
+          - button "Locking Lens Cap" [ref=f74e125] [cursor=pointer]:
+            - generic [ref=f74e130]: $12.00
+          - button "Woven Shoulder Strap" [active] [pressed] [ref=f74e132] [cursor=pointer]:
+            - generic [ref=f74e137]: $29.00
+          - button "Vintage Leather Backpack" [ref=f74e139] [cursor=pointer]:
+            - generic [ref=f74e144]: $149.00
+        - generic [ref=f74e146]:
+          - generic [ref=f74e147]:
+            - button "Decrease quantity" [ref=f74e148]
+            - generic [ref=f74e150]: "2"
+            - button "Increase quantity" [ref=f74e151]
+          - button "Continue" [ref=f74e155]

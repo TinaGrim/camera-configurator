@@ -1,0 +1,78 @@
+- generic [ref=f74e3]:
+  - banner:
+    - generic: Mirage.
+    - button "Back" [ref=f74e158]
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - paragraph: The body
+          - heading "Vela Pro" [level=2]
+          - paragraph: Gunmetal
+          - generic: ×2
+        - button "Back" [ref=f74e98]
+      - button "33MP Stacked CMOS · 8K" [ref=f74e102]
+    - generic:
+      - generic:
+        - generic [ref=f74e109]:
+          - generic [ref=f74e110]:
+            - generic [ref=f74e111]: Your price
+            - generic [ref=f74e166]: −10%
+          - generic [ref=f74e112]: $635.31
+          - generic [ref=f74e167]:
+            - generic [ref=f74e168]: $978.00
+            - generic [ref=f74e169]: You save $92.00
+        - tablist "Camera models" [ref=f74e170]:
+          - tab "Aurora X7 Matte Black" [ref=f74e171] [cursor=pointer]:
+            - generic [ref=f74e172]: −15%
+            - generic [ref=f74e174]: "01"
+            - generic [ref=f74e175]: $410.00
+          - tab "Vela Pro Gunmetal" [selected] [ref=f74e177] [cursor=pointer]:
+            - generic [ref=f74e179]: −10%
+            - generic [ref=f74e181]: "02"
+            - generic [ref=f74e182]: $460.00
+          - tab "Drift Mini Charcoal" [ref=f74e184] [cursor=pointer]:
+            - generic [ref=f74e185]: −15%
+            - generic [ref=f74e187]: "03"
+            - generic [ref=f74e188]: $280.00
+          - tab "Nova Lite Sand" [ref=f74e190] [cursor=pointer]:
+            - generic [ref=f74e191]: "04"
+            - generic [ref=f74e192]: $199.00
+        - generic [ref=f74e146]:
+          - generic [ref=f74e147]:
+            - button "Decrease quantity" [ref=f74e148]
+            - generic [ref=f74e150]: "2"
+            - button "Increase quantity" [ref=f74e151]
+          - button "Continue" [active] [ref=f74e155]
+  - generic [ref=f74e196]:
+    - generic [ref=f74e197]:
+      - generic [ref=f74e198]:
+        - paragraph [ref=f74e199]: The order
+        - heading "Invoice" [level=2] [ref=f74e200]
+      - generic [ref=f74e201]: "#CC-20260925-1050-48"
+    - generic [ref=f74e202]:
+      - generic [ref=f74e203]:
+        - generic [ref=f74e204]:
+          - term [ref=f74e205]: Camera
+          - definition [ref=f74e206]: Vela Pro · Gunmetal
+        - generic [ref=f74e207]:
+          - generic [ref=f74e208]: −10%
+          - generic [ref=f74e209]: $460.00
+      - generic [ref=f74e210]:
+        - generic [ref=f74e211]:
+          - term [ref=f74e212]: Accessory
+          - definition [ref=f74e213]: Woven Shoulder Strap
+        - generic [ref=f74e214]: $29.00
+      - generic [ref=f74e216]:
+        - term [ref=f74e217]: Quantity
+        - definition [ref=f74e218]: × 2
+      - generic [ref=f74e219]:
+        - term [ref=f74e220]: Subtotal
+        - definition [ref=f74e221]: $978.00
+      - generic [ref=f74e222]:
+        - term [ref=f74e223]: Discount
+        - definition [ref=f74e224]: −$92.00
+      - generic [ref=f74e226]:
+        - generic [ref=f74e227]: Total
+        - generic [ref=f74e228]: $886.00
+    - button "Send to shop chat" [ref=f74e231]

@@ -1,0 +1,521 @@
+:root {
+  --bg: #0a0a0c;
+  --fg: #f4f1ea;
+  --fg-dim: #8b8b93;
+  --accent: #e2b877;
+  --accent-deep: #b98a45;
+  --hair: rgba(226, 184, 119, 0.22);
+  --card: rgba(20, 20, 24, 0.9);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html,
+body {
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+  background: var(--bg);
+}
+#root {
+  position: relative;
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+  background: var(--bg);
+  font-family: 'Inter', sans-serif;
+  color: var(--fg);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- 3D stage ---------- */
+#stage-canvas {
+  position: absolute;
+  inset: 0;
+  width: 1920px;
+  height: 1080px;
+  display: block;
+}
+#stage-scrim {
+  position: absolute;
+  inset: 0;
+  background: var(--bg);
+  pointer-events: none;
+  opacity: 0;
+}
+#vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    120% 90% at 50% 45%,
+    rgba(0, 0, 0, 0) 38%,
+    rgba(0, 0, 0, 0.55) 100%
+  );
+}
+#grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---------- Hero (Scene 1) ---------- */
+#hero-layer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  z-index: 20;
+}
+#hero-inner {
+  position: relative;
+  text-align: center;
+  width: 1400px;
+}
+#eyebrow {
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+  margin-bottom: 34px;
+}
+#headline {
+  font-family: 'Fraunces', serif;
+  font-size: 138px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.035em;
+  transform-origin: 50% 50%;
+}
+#sub {
+  margin-top: 26px;
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 40px;
+  font-weight: 400;
+  color: var(--accent);
+  letter-spacing: -0.01em;
+}
+#price-lock {
+  margin: 54px auto 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  width: 620px;
+}
+.rule {
+  display: block;
+  height: 1px;
+  background: var(--hair);
+  transform-origin: 0 50%;
+}
+#price-lock .rule {
+  flex: 1;
+}
+#price-lock-text {
+  font-size: 21px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--fg);
+  white-space: nowrap;
+}
+#tap-hint {
+  position: absolute;
+  left: 50%;
+  bottom: -168px;
+  transform: translateX(-50%);
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: var(--fg-dim);
+  white-space: nowrap;
+}
+#tap-anywhere {
+  color: var(--fg);
+  font-weight: 500;
+}
+#tap-ripple {
+  position: absolute;
+  left: 50%;
+  bottom: -196px;
+  width: 260px;
+  height: 260px;
+  margin-left: -130px;
+  margin-bottom: -130px;
+  border: 1px solid var(--accent);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* ---------- Config rail (Scenes 2-4) ---------- */
+#rail {
+  position: absolute;
+  right: 68px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+}
+#rail ol {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+#rail li {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+}
+#rail .dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  border: 1px solid var(--fg-dim);
+  background: rgba(0, 0, 0, 0);
+  flex: none;
+}
+#rail .label {
+  white-space: nowrap;
+}
+
+/* ---------- Product card (Scene 2) ---------- */
+#product-card {
+  position: absolute;
+  left: 96px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 430px;
+  z-index: 10;
+}
+#product-card .label {
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+  margin-bottom: 20px;
+}
+#product-card h2 {
+  font-family: 'Fraunces', serif;
+  font-size: 68px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+#product-card .finish {
+  margin-top: 16px;
+  font-size: 20px;
+  color: var(--fg-dim);
+  letter-spacing: 0.02em;
+}
+#product-card .price-row {
+  margin-top: 34px;
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+}
+#price-main {
+  font-family: 'Fraunces', serif;
+  font-size: 58px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--fg);
+  font-variant-numeric: tabular-nums;
+}
+.off {
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--bg);
+  background: var(--accent);
+  padding: 5px 11px;
+  border-radius: 4px;
+}
+#spec-pill {
+  position: absolute;
+  right: 96px;
+  top: 74px;
+  z-index: 10;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  border: 1px solid var(--hair);
+  border-radius: 999px;
+  padding: 13px 26px;
+  background: rgba(10, 10, 12, 0.55);
+}
+
+/* ---------- Simulated cursor (Scene 3) ---------- */
+#cursor {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 34px;
+  height: 34px;
+  margin: -4px 0 0 -4px;
+  z-index: 14;
+  pointer-events: none;
+}
+#cursor svg {
+  width: 34px;
+  height: 34px;
+  display: block;
+}
+
+/* ---------- Kit chips (Scene 3) ---------- */
+#kit-chips {
+  position: absolute;
+  left: 96px;
+  bottom: 96px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 470px;
+}
+.chip {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--card);
+  border: 1px solid var(--hair);
+  border-radius: 12px;
+  padding: 18px 22px;
+  font-size: 19px;
+  font-weight: 400;
+  color: var(--fg);
+  letter-spacing: 0.01em;
+}
+.chip .check {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid var(--accent-deep);
+  flex: none;
+  position: relative;
+}
+.chip .check::after {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 3px;
+  width: 7px;
+  height: 12px;
+  border-right: 2px solid var(--accent);
+  border-bottom: 2px solid var(--accent);
+  transform: rotate(42deg);
+}
+.chip b {
+  margin-left: auto;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+}
+
+/* ---------- Invoice (Scenes 4-5) ---------- */
+#invoice {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 720px;
+  z-index: 12;
+  background: var(--card);
+  border: 1px solid var(--hair);
+  border-radius: 20px;
+  padding: 46px 52px 44px;
+  backdrop-filter: blur(14px);
+}
+#invoice .inv-head {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+  margin-bottom: 30px;
+}
+.row {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding: 15px 0;
+  font-size: 22px;
+  color: var(--fg);
+}
+.row .meta {
+  font-size: 16px;
+  color: var(--fg-dim);
+}
+.row .amt {
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+.row.sub {
+  color: var(--fg-dim);
+  border-top: 1px solid var(--hair);
+  margin-top: 10px;
+  padding-top: 22px;
+  font-size: 20px;
+}
+.row.disc .amt {
+  color: var(--accent);
+}
+#inv-rule {
+  height: 1px;
+  background: var(--hair);
+  margin: 18px 0 20px;
+  transform-origin: 0 50%;
+}
+.row.total {
+  font-family: 'Fraunces', serif;
+  font-size: 46px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--accent);
+  transform-origin: 100% 50%;
+}
+#cta {
+  margin-top: 30px;
+  width: 100%;
+  background: var(--accent);
+  color: #14110c;
+  border: none;
+  border-radius: 12px;
+  padding: 21px 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transform-origin: 50% 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#cta-busy {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+#cta .spinner {
+  width: 19px;
+  height: 19px;
+  border: 2px solid rgba(20, 17, 12, 0.28);
+  border-top-color: #14110c;
+  border-radius: 50%;
+  flex: none;
+}
+
+/* ---------- Handoff (Scene 5) ---------- */
+#handoff {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 12;
+  text-align: center;
+  width: 720px;
+}
+#check-ring {
+  width: 104px;
+  height: 104px;
+  margin: 0 auto 40px;
+  position: relative;
+}
+#check-ring svg {
+  width: 104px;
+  height: 104px;
+  display: block;
+  overflow: visible;
+}
+#check-ring .ring {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.5;
+}
+#check-ring .tick {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+}
+#check-ring .halo {
+  position: absolute;
+  inset: -34px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(226, 184, 119, 0.22) 0%,
+    rgba(226, 184, 119, 0) 68%
+  );
+}
+#order-ready {
+  font-family: 'Fraunces', serif;
+  font-size: 76px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+#order-ready em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+/* ---------- Closing lockup (Scene 5) ---------- */
+#lockup {
+  position: absolute;
+  inset: 0;
+  z-index: 16;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+}
+#lockup .rule {
+  width: 420px;
+}
+#lockup h1 {
+  font-size: 74px;
+  font-weight: 700;
+  letter-spacing: 0.34em;
+  text-indent: 0.34em;
+}
+#lockup h1 .ch {
+  display: inline-block;
+}
+#punchline {
+  margin-top: 40px;
+  font-family: 'Fraunces', serif;
+  font-size: 40px;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--fg);
+  letter-spacing: -0.005em;
+}

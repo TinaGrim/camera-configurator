@@ -1,0 +1,3 @@
+Introducing the MIRAGE Aurora X7 Configurator.
+Strap, cap, and a live-updating total — the whole build, minus the spreadsheet.
+Built with React Three Fiber and Hyperframes.

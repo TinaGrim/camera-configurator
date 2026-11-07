@@ -1,0 +1,44 @@
+- generic [ref=f71e3]:
+  - banner:
+    - generic: Mirage.
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - paragraph: Your kit
+          - heading "Woven Shoulder Strap" [level=2]
+          - paragraph: 1 item selected
+        - button "Back" [ref=f71e113]
+      - button "24MP Full-Frame Sensor" [ref=f71e117]
+    - generic:
+      - generic:
+        - generic [ref=f71e124]:
+          - generic [ref=f71e125]: Kit total
+          - generic [ref=f71e127]: $20.94
+          - generic [ref=f71e129]: 1 add-on picked
+        - generic [ref=f71e132]:
+          - checkbox "Leather Wrist Keychain" [ref=f71e133] [cursor=pointer]:
+            - generic [ref=f71e138]: $19.00
+            - generic [ref=f71e140]:
+              - button "Decrease Leather Wrist Keychain quantity" [disabled] [ref=f71e141]
+              - generic [ref=f71e143]: "1"
+              - button "Increase Leather Wrist Keychain quantity" [ref=f71e144]
+          - checkbox "Locking Lens Cap" [ref=f71e147] [cursor=pointer]:
+            - generic [ref=f71e152]: $12.00
+            - generic [ref=f71e154]:
+              - button "Decrease Locking Lens Cap quantity" [disabled] [ref=f71e155]
+              - generic [ref=f71e157]: "1"
+              - button "Increase Locking Lens Cap quantity" [ref=f71e158]
+          - checkbox "Woven Shoulder Strap" [checked] [active] [ref=f71e161] [cursor=pointer]:
+            - generic [ref=f71e166]: $29.00
+            - generic [ref=f71e168]:
+              - button "Decrease Woven Shoulder Strap quantity" [disabled] [ref=f71e169]
+              - generic [ref=f71e171]: "1"
+              - button "Increase Woven Shoulder Strap quantity" [ref=f71e172]
+          - checkbox "Vintage Leather Backpack" [ref=f71e175] [cursor=pointer]:
+            - generic [ref=f71e180]: $149.00
+            - generic [ref=f71e182]:
+              - button "Decrease Vintage Leather Backpack quantity" [disabled] [ref=f71e183]
+              - generic [ref=f71e185]: "1"
+              - button "Increase Vintage Leather Backpack quantity" [ref=f71e186]
+        - button "Continue" [ref=f71e191]

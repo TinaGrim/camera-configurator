@@ -1,0 +1,70 @@
+- generic [ref=f3e3]:
+  - banner:
+    - generic: Mirage.
+  - navigation "Progress":
+    - generic [ref=f3e4]:
+      - generic [ref=f3e6]: Stage
+      - generic [ref=f3e9]: Camera
+      - generic [ref=f3e12]: Kit
+      - generic [ref=f3e15]: Review
+      - generic [ref=f3e18]: Sent
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - paragraph: Your kit
+          - heading "Woven Shoulder Strap" [level=2]
+          - paragraph: 1 item selected
+        - button "Back" [ref=f3e135]
+      - generic:
+        - paragraph: 24MP Full-Frame Sensor
+    - generic:
+      - generic:
+        - generic [ref=f3e140]:
+          - generic [ref=f3e141]: Kit total
+          - generic [ref=f3e142]: $115.70
+          - generic [ref=f3e186]: 1 add-on picked
+        - generic [ref=f3e188]:
+          - button "Leather Wrist Keychain" [ref=f3e189]:
+            - generic [ref=f3e194]:
+              - generic [ref=f3e195]: Leather Wrist Keychain
+              - generic [ref=f3e196]: $19.00
+          - button "Locking Lens Cap" [ref=f3e197]:
+            - generic [ref=f3e202]:
+              - generic [ref=f3e203]: Locking Lens Cap
+              - generic [ref=f3e204]: $12.00
+          - button "Woven Shoulder Strap" [pressed] [ref=f3e205]:
+            - generic [ref=f3e210]:
+              - generic [ref=f3e211]: Woven Shoulder Strap
+              - generic [ref=f3e212]: $29.00
+        - button "Continue" [active] [ref=f3e181]
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - paragraph: Your kit
+          - heading "Woven Shoulder Strap" [level=2]
+          - paragraph: 1 item selected
+        - button "Back" [ref=f3e213]
+      - generic:
+        - paragraph: 24MP Full-Frame Sensor
+    - generic:
+      - generic:
+        - generic [ref=f3e218]:
+          - generic [ref=f3e219]: Kit total
+          - generic [ref=f3e220]: $29.00
+          - generic [ref=f3e222]: 1 add-on picked
+        - generic [ref=f3e225]:
+          - button "Leather Wrist Keychain" [ref=f3e226]:
+            - generic [ref=f3e231]:
+              - generic [ref=f3e232]: Leather Wrist Keychain
+              - generic [ref=f3e233]: $19.00
+          - button "Locking Lens Cap" [ref=f3e234]:
+            - generic [ref=f3e239]:
+              - generic [ref=f3e240]: Locking Lens Cap
+              - generic [ref=f3e241]: $12.00
+          - button "Woven Shoulder Strap" [pressed] [ref=f3e242]:
+            - generic [ref=f3e247]:
+              - generic [ref=f3e248]: Woven Shoulder Strap
+              - generic [ref=f3e249]: $29.00
+        - button "Continue" [ref=f3e252]

@@ -1,0 +1,53 @@
+- generic [ref=f196e3]:
+  - banner:
+    - generic: Mirage.
+  - navigation "Progress" [ref=f196e4]:
+    - generic [ref=f196e7]:
+      - generic [ref=f196e8]: Stage
+      - generic [ref=f196e12]: Camera
+      - generic [ref=f196e16]: Kit
+      - generic [ref=f196e20]: Review
+      - generic [ref=f196e24]: Sent
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - paragraph: The body
+          - heading "Aurora X7" [level=2]
+          - paragraph: Matte Black
+        - button "Back" [ref=f196e45]
+      - button "24MP Full-Frame Sensor" [ref=f196e49]
+    - generic:
+      - generic:
+        - generic [ref=f196e55]:
+          - generic [ref=f196e56]:
+            - generic [ref=f196e57]: $316.55
+            - generic [ref=f196e104]: "1"
+          - generic [ref=f196e63]:
+            - generic [ref=f196e64]: $410.00
+            - generic [ref=f196e65]: You save $61.50
+        - tablist "Camera models" [ref=f196e67]:
+          - tab "Aurora X7 Matte Black" [selected] [ref=f196e68] [cursor=pointer]:
+            - generic [ref=f196e69]:
+              - generic [ref=f196e70]: −15%
+              - generic [ref=f196e105]: ×1
+            - generic [ref=f196e71]: "01"
+            - generic [ref=f196e72]: $410.00
+          - tab "Vela Pro Gunmetal" [ref=f196e74] [cursor=pointer]:
+            - generic [ref=f196e75]: −10%
+            - generic [ref=f196e77]: "02"
+            - generic [ref=f196e78]: $460.00
+          - tab "Drift Mini Charcoal" [ref=f196e80] [cursor=pointer]:
+            - generic [ref=f196e81]: −15%
+            - generic [ref=f196e83]: "03"
+            - generic [ref=f196e84]: $280.00
+          - tab "Nova Lite Sand" [ref=f196e86] [cursor=pointer]:
+            - generic [ref=f196e87]: "04"
+            - generic [ref=f196e88]: $199.00
+        - generic [ref=f196e90]:
+          - generic [ref=f196e93]:
+            - button "Decrease quantity" [ref=f196e94]
+            - generic [ref=f196e96]: "1"
+            - button "Increase quantity" [active] [ref=f196e97]
+          - button "Continue" [ref=f196e101]
+      - generic: ×1

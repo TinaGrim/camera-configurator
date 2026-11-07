@@ -1,0 +1,55 @@
+- generic [ref=f71e3]:
+  - banner:
+    - generic: Mirage.
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - paragraph: The body
+          - heading "Aurora X7" [level=2]
+          - paragraph: Matte Black
+        - button "Back" [ref=f71e30]
+      - button "24MP Full-Frame Sensor" [ref=f71e34]
+    - generic:
+      - generic:
+        - generic [ref=f71e41]:
+          - generic [ref=f71e42]:
+            - generic [ref=f71e43]: Your price
+            - generic [ref=f71e44]: −15%
+          - generic [ref=f71e45]: $589.02
+          - generic [ref=f71e47]:
+            - generic [ref=f71e48]: $820.00
+            - generic [ref=f71e49]: You save $123.00
+        - tablist "Camera models" [ref=f71e51]:
+          - tab "Aurora X7 Matte Black" [selected] [ref=f71e52] [cursor=pointer]:
+            - generic [ref=f71e54]: −15%
+            - generic [ref=f71e56]: "01"
+            - generic [ref=f71e57]: $410.00
+            - generic [ref=f71e59]:
+              - button "Decrease Aurora X7 quantity" [ref=f71e60]
+              - generic [ref=f71e62]: "2"
+              - button "Increase Aurora X7 quantity" [active] [ref=f71e63]
+          - tab "Vela Pro Gunmetal" [ref=f71e66] [cursor=pointer]:
+            - generic [ref=f71e67]: −10%
+            - generic [ref=f71e69]: "02"
+            - generic [ref=f71e70]: $460.00
+            - generic [ref=f71e72]:
+              - button "Decrease Vela Pro quantity" [disabled] [ref=f71e73]
+              - generic [ref=f71e75]: "1"
+              - button "Increase Vela Pro quantity" [ref=f71e76]
+          - tab "Drift Mini Charcoal" [ref=f71e79] [cursor=pointer]:
+            - generic [ref=f71e80]: −15%
+            - generic [ref=f71e82]: "03"
+            - generic [ref=f71e83]: $280.00
+            - generic [ref=f71e85]:
+              - button "Decrease Drift Mini quantity" [disabled] [ref=f71e86]
+              - generic [ref=f71e88]: "1"
+              - button "Increase Drift Mini quantity" [ref=f71e89]
+          - tab "Nova Lite Sand" [ref=f71e92] [cursor=pointer]:
+            - generic [ref=f71e93]: "04"
+            - generic [ref=f71e94]: $199.00
+            - generic [ref=f71e96]:
+              - button "Decrease Nova Lite quantity" [disabled] [ref=f71e97]
+              - generic [ref=f71e99]: "1"
+              - button "Increase Nova Lite quantity" [ref=f71e100]
+        - button "Continue" [ref=f71e105]

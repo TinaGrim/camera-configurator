@@ -1,0 +1,50 @@
+- generic [ref=f196e3]:
+  - banner:
+    - generic: Mirage.
+  - navigation "Progress" [ref=f196e4]:
+    - generic [ref=f196e7]:
+      - generic [ref=f196e8]: Stage
+      - generic [ref=f196e12]: Camera
+      - generic [ref=f196e16]: Kit
+      - generic [ref=f196e20]: Review
+      - generic [ref=f196e24]: Sent
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - paragraph: The body
+          - heading "Nova Lite" [level=2]
+          - paragraph: Sand
+        - button "Back" [ref=f196e246]
+      - button "Photo preview · image mode" [ref=f196e307]
+    - generic:
+      - generic:
+        - generic [ref=f196e256]:
+          - generic [ref=f196e257]:
+            - generic [ref=f196e258]: $348.50
+            - generic [ref=f196e264]: "1"
+          - generic [ref=f196e308]: Studio-grade · everyday price
+        - tablist "Camera models" [ref=f196e269]:
+          - tab "Aurora X7 Matte Black" [ref=f196e270] [cursor=pointer]:
+            - generic [ref=f196e271]:
+              - generic [ref=f196e272]: −15%
+              - generic [ref=f196e273]: ×1
+            - generic [ref=f196e274]: "01"
+            - generic [ref=f196e275]: $410.00
+          - tab "Vela Pro Gunmetal" [ref=f196e277] [cursor=pointer]:
+            - generic [ref=f196e278]: −10%
+            - generic [ref=f196e280]: "02"
+            - generic [ref=f196e281]: $460.00
+          - tab "Drift Mini Charcoal" [ref=f196e283] [cursor=pointer]:
+            - generic [ref=f196e284]: −15%
+            - generic [ref=f196e286]: "03"
+            - generic [ref=f196e287]: $280.00
+          - tab "Nova Lite Sand" [active] [selected] [ref=f196e289] [cursor=pointer]:
+            - generic [ref=f196e290]: "04"
+            - generic [ref=f196e291]: $199.00
+        - generic [ref=f196e293]:
+          - generic [ref=f196e296]:
+            - button "Decrease quantity" [disabled] [ref=f196e297]
+            - generic [ref=f196e299]: "0"
+            - button "Increase quantity" [ref=f196e300]
+          - button "Continue" [ref=f196e304]

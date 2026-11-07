@@ -1,0 +1,37 @@
+- generic [ref=f77e3]:
+  - banner:
+    - generic: Mirage.
+    - button "Back" [ref=f77e39]
+  - navigation "Progress" [ref=f77e4]:
+    - generic [ref=f77e6]: Stage
+    - generic [ref=f77e10]: Camera
+    - generic [ref=f77e14]: Kit
+    - generic [ref=f77e18]: Review
+    - generic [ref=f77e22]: Sent
+  - generic [ref=f77e55]:
+    - generic [ref=f77e56]:
+      - generic [ref=f77e57]:
+        - paragraph [ref=f77e58]: The order
+        - heading "Invoice" [level=2] [ref=f77e59]
+      - generic [ref=f77e60]: "#CC-20260925-1115-66"
+    - generic [ref=f77e61]:
+      - generic [ref=f77e62]:
+        - generic [ref=f77e63]:
+          - term [ref=f77e64]: Camera
+          - definition [ref=f77e65]: Aurora X7 · Matte Black
+        - generic [ref=f77e66]:
+          - generic [ref=f77e67]: −15%
+          - generic [ref=f77e68]: $410.00
+      - generic [ref=f77e69]:
+        - term [ref=f77e70]: Quantity
+        - definition [ref=f77e71]: × 1
+      - generic [ref=f77e72]:
+        - term [ref=f77e73]: Subtotal
+        - definition [ref=f77e74]: $410.00
+      - generic [ref=f77e75]:
+        - term [ref=f77e76]: Discount
+        - definition [ref=f77e77]: −$61.50
+      - generic [ref=f77e79]:
+        - generic [ref=f77e80]: Total
+        - generic [ref=f77e81]: $348.50
+    - button "Opening Telegram…" [disabled] [ref=f77e95]

@@ -1,0 +1,55 @@
+- generic [ref=f193e3]:
+  - banner:
+    - generic: Mirage.
+  - navigation "Progress" [ref=f193e4]:
+    - generic [ref=f193e7]:
+      - generic [ref=f193e8]: Stage
+      - generic [ref=f193e12]: Camera
+      - generic [ref=f193e16]: Kit
+      - generic [ref=f193e20]: Review
+      - generic [ref=f193e24]: Sent
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - paragraph: Stage
+          - paragraph: Make it yours — pick your extras
+        - button "Back" [ref=f193e109]
+      - generic [ref=f193e112]:
+        - button "24MP Full-Frame Sensor" [expanded] [ref=f193e113]
+        - generic [ref=f193e169]:
+          - generic [ref=f193e170]:
+            - term [ref=f193e171]: Model
+            - definition [ref=f193e172]: Aurora X7
+          - generic [ref=f193e173]:
+            - term [ref=f193e174]: Finish
+            - definition [ref=f193e175]: Matte Black
+          - generic [ref=f193e176]:
+            - term [ref=f193e177]: Sensor
+            - definition [ref=f193e178]: 24MP Full-Frame Sensor
+          - generic [ref=f193e179]:
+            - term [ref=f193e180]: Price
+            - definition [ref=f193e181]: $410.00
+          - generic [ref=f193e182]:
+            - term [ref=f193e183]: Bundle
+            - definition [ref=f193e184]: −15% off
+    - generic:
+      - generic:
+        - generic [ref=f193e118]: $0.00
+        - generic [ref=f193e129]:
+          - button "Leather Wrist Keychain" [ref=f193e130] [cursor=pointer]:
+            - generic [ref=f193e132]: $19.00
+          - button "Locking Lens Cap" [ref=f193e134] [cursor=pointer]:
+            - generic [ref=f193e136]: $12.00
+          - button "Woven Shoulder Strap" [active] [ref=f193e138] [cursor=pointer]:
+            - generic [ref=f193e140]: $29.00
+          - button "Vintage Leather Backpack" [ref=f193e142] [cursor=pointer]:
+            - generic [ref=f193e144]: $149.00
+        - generic [ref=f193e146]:
+          - generic [ref=f193e186]:
+            - generic [aria-hidden] [ref=f193e187]: Woven Shoulder Strap
+            - generic [ref=f193e188]:
+              - button "Decrease quantity" [disabled] [ref=f193e189]
+              - generic [ref=f193e191]: "0"
+              - button "Increase quantity" [ref=f193e192]
+          - button "Continue" [ref=f193e148]

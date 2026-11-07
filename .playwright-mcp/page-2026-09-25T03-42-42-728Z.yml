@@ -1,0 +1,36 @@
+- generic [ref=f73e3]:
+  - banner:
+    - generic: Mirage.
+    - button "Back" [ref=f73e152]
+  - generic [ref=f73e190]:
+    - generic [ref=f73e191]:
+      - generic [ref=f73e192]:
+        - paragraph [ref=f73e193]: The order
+        - heading "Invoice" [level=2] [ref=f73e194]
+      - generic [ref=f73e195]: "#CC-20260925-1042-57"
+    - generic [ref=f73e196]:
+      - generic [ref=f73e197]:
+        - generic [ref=f73e198]:
+          - term [ref=f73e199]: Camera
+          - definition [ref=f73e200]: Aurora X7 · Matte Black
+        - generic [ref=f73e201]:
+          - generic [ref=f73e202]: −15%
+          - generic [ref=f73e203]: $410.00
+      - generic [ref=f73e204]:
+        - generic [ref=f73e205]:
+          - term [ref=f73e206]: Accessory
+          - definition [ref=f73e207]: Woven Shoulder Strap
+        - generic [ref=f73e208]: $29.00
+      - generic [ref=f73e210]:
+        - term [ref=f73e211]: Quantity
+        - definition [ref=f73e212]: × 2
+      - generic [ref=f73e213]:
+        - term [ref=f73e214]: Subtotal
+        - definition [ref=f73e215]: $878.00
+      - generic [ref=f73e216]:
+        - term [ref=f73e217]: Discount
+        - definition [ref=f73e218]: −$123.00
+      - generic [ref=f73e220]:
+        - generic [ref=f73e221]: Total
+        - generic [ref=f73e222]: $755.00
+    - button "Send to shop chat" [ref=f73e225]

@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>MIRAGE — Camera Atelier</title>
+<style>
+  @font-face{font-family:'Fraunces';font-style:italic;font-weight:300 700;font-display:block;
+    src:url('assets/fonts/fraunces-italic-latin-ext.woff2') format('woff2');
+    src:url('assets/fonts/fraunces-italic-latin.woff2') format('woff2');
+    unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;}
+  @font-face{font-family:'Fraunces';font-style:normal;font-weight:300 700;font-display:block;
+    src:url('assets/fonts/fraunces-normal-latin-ext.woff2') format('woff2');
+    src:url('assets/fonts/fraunces-normal-latin.woff2') format('woff2');
+    unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;}
+  @font-face{font-family:'Inter';font-style:normal;font-weight:400 700;font-display:block;
+    src:url('assets/fonts/inter-normal-latin-ext.woff2') format('woff2');
+    src:url('assets/fonts/inter-normal-latin.woff2') format('woff2');
+    unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;}
+</style>
+<style>
+  :root{
+    --bg:#0a0a0c; --panel:#121216; --panel-d:#0e0e11;
+    --ink:#f4f1ea; --ink-soft:#d8d2c6; --ink-muted:#9d968a; --ink-faint:#8e877c;
+    --gold:#e2b877; --gold-deep:#b98a45; --gold-lift:#f2d5a8; --line:rgba(244,241,234,.12);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{background:#000;width:1080px;height:1920px;overflow:hidden;}
+  body{font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased;}
+  #root{position:relative;width:1080px;height:1920px;overflow:hidden;background:var(--bg);
+         font-family:'Inter',system-ui,sans-serif;color:var(--ink);}
+  .clip{position:absolute;inset:0;}
+  audio{display:block;width:0;height:0;overflow:hidden;}
+
+  /* ---------- persistent atmosphere ---------- */
+  #bg{position:absolute;inset:0;
+      background:radial-gradient(130% 74% at 50% 13%,#1a1712 0%,#101014 44%,#0a0a0c 100%);}
+  #stage-glow{position:absolute;left:50%;top:130px;width:1300px;height:1120px;margin-left:-650px;
+      background:radial-gradient(closest-side,rgba(226,184,119,.20),rgba(226,184,119,.05) 58%,transparent 76%);
+      transform:translate(0,-10px) scale(1);opacity:.85;}
+  #stage-floor{position:absolute;left:0;right:0;bottom:0;height:520px;
+      background:linear-gradient(to top,rgba(226,184,119,.055),transparent 72%);}
+  #grain{position:absolute;inset:0;opacity:.05;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");}
+  #hair-in{position:absolute;left:0;right:0;top:260px;height:1px;background:linear-gradient(90deg,transparent,rgba(226,184,119,.55),transparent);transform:scaleX(0);transform-origin:50% 0%;}
+  #vignette{position:absolute;inset:0;z-index:7;box-shadow:inset 0 0 300px 24px rgba(0,0,0,.34);}
+  #outro{position:absolute;inset:0;z-index:8;background:#000;opacity:0;}
+
+  .eyebrow{font-size:19px;letter-spacing:.28em;text-transform:uppercase;font-weight:500;
+      color:var(--ink-muted);font-family:'Inter',sans-serif;}
+  .serif{font-family:'Fraunces',Georgia,serif;}
+  .gold-text{background:linear-gradient(120deg,#f0d9a8 0%,#e2b877 45%,#b98a45 100%);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;color:transparent;}
+  .gold-italic{font-style:italic;}
+
+  /* ---------- scene 1 · hook ---------- */
+  #s1{display:flex;flex-direction:column;align-items:center;text-align:center;
+      padding:200px 72px 0;background:radial-gradient(120% 70% at 50% 12%,rgba(226,184,119,.05),transparent 62%);}
+  #h1{font-size:124px;line-height:1.02;font-weight:500;letter-spacing:-.02em;color:var(--ink);
+      font-family:'Fraunces',serif;}
+  #h1 .gold-text{font-size:62px;line-height:1.16;display:block;margin-top:22px;font-style:italic;}
+  #s1-price{font-size:24px;color:var(--ink-muted);font-variant-numeric:tabular-nums;
+      letter-spacing:.04em;margin-top:40px;}
+
+  /* ---------- scene 2 · price hero (new for ad) ---------- */
+  #price-layer{display:flex;flex-direction:column;align-items:center;text-align:center;
+      padding:200px 72px 0;}
+  #ph-spec{font-size:21px;letter-spacing:.28em;text-transform:uppercase;color:var(--ink-muted);
+      margin-bottom:40px;}
+  #ph-wrap{position:relative;display:flex;flex-direction:column;align-items:center;}
+  #ph-ln{width:120px;height:1px;margin:44px auto;
+      background:linear-gradient(90deg,transparent,rgba(226,184,119,.6),transparent);}
+  #ph-num{display:flex;align-items:center;font-size:150px;font-weight:500;font-variant-numeric:tabular-nums;
+      color:var(--ink);font-family:'Fraunces',serif;font-style:italic;margin:8px 0;--ph-dh:170px;}
+  #ph-num .dc{width:90px;height:var(--ph-dh);overflow:hidden;}
+  #ph-num .dc .ds{display:block;}
+  #ph-num .dc b{display:block;height:var(--ph-dh);font-size:150px;font-weight:500;color:var(--ink);
+      line-height:var(--ph-dh);font-variant-numeric:tabular-nums;}
+  #ph-name{font-size:38px;font-weight:500;color:var(--ink-soft);font-family:'Fraunces',serif;margin-top:16px;}
+  #ph-save{font-size:22px;color:var(--ink-muted);font-variant-numeric:tabular-nums;margin-top:22px;}
+
+  /* ---------- app chrome (scenes 3-4) ---------- */
+  #app-inner{position:absolute;inset:0;}
+  #app-top{position:absolute;left:0;right:0;top:0;height:230px;
+      display:flex;align-items:flex-start;justify-content:space-between;padding:70px 46px 0;}
+  #app-mark{line-height:1;}
+  #bag{position:absolute;right:46px;top:96px;width:74px;height:74px;border-radius:22px;
+      background:#161619;border:1px solid #202023;
+      display:flex;align-items:center;justify-content:center;}
+  #badge{position:absolute;right:-8px;top:-8px;width:36px;height:36px;border-radius:50%;
+      background:var(--gold-lift);color:#0a0a0c;font-size:19px;font-weight:700;}
+  #badge span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+      background:var(--gold-lift);border-radius:50%;}
+
+  #progress{position:absolute;left:0;right:0;top:198px;display:flex;justify-content:center;gap:14px;
+      align-items:center;padding:0 46px;}
+  /* #rail is the flex row of steps; #progress only centres it */
+  #rail{display:flex;align-items:center;gap:14px;}
+  .pstep{position:relative;display:flex;align-items:center;gap:12px;cursor:default;
+      width:184px;flex:none;}
+  .pbar{width:100px;height:2px;background:rgba(244,241,234,.10);position:relative;overflow:hidden;flex:none;}
+  .pbar i{position:absolute;inset:0;background:var(--gold);transform:scaleX(0);transform-origin:left;}
+  .pdot{width:20px;height:20px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;
+      flex-shrink:0;font-size:9px;font-weight:700;color:#0a0a0c;line-height:1;
+      background:var(--gold-lift);opacity:0;visibility:hidden;}
+  .pdot::after{content:'\25CF';}
+  .pdot.on{opacity:1;visibility:visible;background:var(--gold);box-shadow:0 0 12px rgba(226,184,119,.55);}
+  .pdot.on::after{content:'\25CF';}
+  .pdot.done{opacity:1;visibility:visible;background:var(--gold-lift);}
+  .pdot.done::after{content:'\2713';}
+  .p-label{font-size:14px;font-weight:500;white-space:nowrap;font-family:'Fraunces',serif;
+      color:var(--ink-faint);}
+  .p-label.on{color:var(--ink);}
+
+  #back{position:absolute;left:46px;top:348px;display:flex;align-items:center;gap:14px;color:var(--ink-soft);
+      visibility:hidden;}
+  #back span{font-size:19px;letter-spacing:.16em;text-transform:uppercase;}
+  #spec-pill{position:absolute;right:46px;top:342px;padding:15px 26px;border-radius:999px;
+      background:rgba(255,255,255,.06);font-size:21px;color:var(--ink-soft);
+      font-variant-numeric:tabular-nums;}
+
+  #card{position:absolute;left:42px;top:410px;width:996px;height:790px;border-radius:32px;
+      padding:44px;background:linear-gradient(150deg,rgba(255,255,255,.055),rgba(255,255,255,.018));
+      border:1px solid rgba(255,255,255,.07);}
+  #c-kick{position:absolute;left:44px;top:44px;}
+  #c-kick-2{position:absolute;left:44px;top:44px;visibility:hidden;}
+  #card h2{position:absolute;left:44px;right:44px;top:80px;font-size:56px;line-height:1.12;
+      font-weight:500;letter-spacing:-.015em;}
+  #card .sub{position:absolute;left:44px;right:44px;top:176px;font-size:21px;color:var(--ink-muted);}
+
+  #stage-ring{position:absolute;left:50%;top:600px;width:820px;height:520px;margin-left:-410px;}
+  #ring-glow{position:absolute;left:50%;top:20px;width:720px;height:420px;margin-left:-360px;
+      border-radius:50%;background:radial-gradient(closest-side,rgba(226,184,119,.22),transparent 70%);}
+  #stage-ring img{position:absolute;left:50%;top:0;width:520px;margin-left:-260px;display:block;
+      max-height:500px;object-fit:contain;}
+
+  #rail-wrap{position:absolute;left:0;right:0;top:1280px;height:250px;}
+  #model-rail{position:absolute;left:90px;top:4px;display:flex;align-items:center;gap:10px;}
+  .rcard{width:216px;height:196px;border-radius:20px;overflow:hidden;position:relative;
+      background:var(--panel);border:1px solid rgba(255,255,255,.07);}
+  .rcard img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+  .rcard .scrim{position:absolute;inset:0;
+      background:linear-gradient(to top,rgba(6,6,8,.95) 8%,rgba(6,6,8,.6) 46%,rgba(6,6,8,.45) 100%);}
+  .rcard .idx{position:absolute;right:12px;top:12px;font-size:17px;font-weight:500;color:#f4f1ea;
+      background:rgba(10,10,12,.74);border-radius:8px;padding:4px 9px;}
+  .rcard .on{position:absolute;left:14px;top:12px;font-size:14px;font-weight:600;color:#f4f1ea;
+      background:rgba(10,10,12,.74);border-radius:999px;padding:3px 10px;visibility:hidden;}
+  .rcard .meta{position:absolute;left:14px;right:14px;bottom:14px;}
+  .rcard .nm{font-size:18px;font-weight:600;color:var(--ink);}
+  .rcard .pr{font-size:17px;color:var(--ink-soft);margin-top:4px;font-variant-numeric:tabular-nums;}
+  .rcard .disc{position:absolute;right:0;bottom:0;background:var(--gold-lift);color:#0a0a0c;
+      font-size:14px;font-weight:700;padding:3px 9px;border-radius:999px;}
+  .rcard .nodisc{position:absolute;right:0;bottom:0;font-size:12px;font-weight:500;
+      color:var(--ink-faint);background:rgba(10,10,12,.74);border-radius:999px;padding:3px 9px;}
+   .rcard .sel{position:absolute;inset:0;border-radius:20px;border:1px solid rgba(226,184,119,.6);
+      box-shadow:inset 0 0 0 1px rgba(226,184,119,.18);opacity:0;}
+  .nova-swatch{position:absolute;left:28px;right:28px;top:44px;height:98px;border-radius:16px;
+      background:linear-gradient(135deg,#d8cfc4 0%,#c0b8ae 100%);display:flex;align-items:center;
+      justify-content:center;border:1px solid rgba(226,184,119,.18);}
+
+  #grid{position:absolute;left:253px;top:0;width:574px;display:flex;flex-wrap:wrap;gap:14px;}
+  .acard{position:relative;width:280px;height:111px;border-radius:18px;background:rgba(18,18,22,.78);
+      border:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:16px;padding:14px 16px;}
+  .acard img{width:82px;height:82px;object-fit:contain;flex: none;display:block;}
+  .acard .nm{font-size:18px;font-weight:600;color:var(--ink);}
+  .acard .pr{font-size:17px;color:var(--ink-soft);margin-top:7px;font-variant-numeric:tabular-nums;}
+  .acard .on{position:absolute;right:12px;top:10px;font-size:14px;font-weight:600;color:#f4f1ea;
+      background:rgba(10,10,12,.74);border-radius:999px;padding:3px 10px;visibility:hidden;}
+
+  #bar{position:absolute;left:0;right:0;top:1600px;height:120px;padding:0 46px;
+      display:flex;align-items:flex-start;justify-content:space-between;}
+  #bar .left{display:flex;flex-direction:column;gap:12px;}
+  #strike,#save,#roll{position:relative;height:26px;font-variant-numeric:tabular-nums;}
+  #strike{font-size:21px;color:var(--ink-muted);text-decoration:line-through;}
+  #save{font-size:18px;color:var(--ink-muted);height:24px;}
+  #strike em,#save em{position:absolute;left:0;top:0;font-style:normal;}
+  #roll{--dh:66px;display:inline-flex;align-items:flex-start;height:var(--dh);}
+  #roll .g{height:var(--dh);line-height:var(--dh);font-size:56px;font-weight:600;color:var(--ink);
+      font-variant-numeric:tabular-nums;display:inline-block;}
+  .dc{display:inline-block;width:34px;height:var(--dh);overflow:hidden;}
+  .dc .ds{display:block;will-change:transform;}
+  .dc b{display:block;height:var(--dh);font-size:56px;font-weight:600;color:var(--ink);
+      line-height:var(--dh);font-variant-numeric:tabular-nums;}
+  .kit{font-size:18px;color:var(--gold);font-weight:500;height:26px;line-height:26px;}
+
+  #stepper{position:absolute;right:46px;top:1630px;display:flex;align-items:center;gap:20px;
+      background:#161619;border:1px solid #202023;border-radius:999px;padding:10px 14px;}
+  #stepper .q{font-size:22px;font-weight:600;color:var(--ink);min-width:26px;text-align:center;}
+  #stepper .dim{font-size:26px;color:var(--ink-muted);line-height:1;}
+  #stepper .lit{font-size:26px;color:var(--ink-soft);line-height:1;}
+  #go{position:absolute;left:46px;right:46px;top:1740px;height:88px;border-radius:22px;
+      background-color:#f2d5a8;
+      background-image:linear-gradient(100deg,#f6dcb4,#e8c288 58%,#cf9d55);
+      color:#14100a;font-size:22px;font-weight:600;letter-spacing:.02em;
+      display:flex;align-items:center;justify-content:center;}
+
+  /* ---------- scene 5 · invoice ---------- */
+  #invoice{position:absolute;left:230px;top:560px;width:620px;border-radius:32px;
+      background:linear-gradient(160deg,#141418,#0e0e11);border:1px solid rgba(255,255,255,.09);
+      padding:38px 40px 40px;}
+  #invoice .kick{margin-bottom:12px;}
+  #invoice h2{font-size:48px;font-weight:500;letter-spacing:-.01em;}
+  #oid{font-size:16px;color:var(--ink-faint);margin-top:10px;font-variant-numeric:tabular-nums;}
+  #irows{margin-top:28px;display:flex;flex-direction:column;gap:2px;}
+  .irow{display:flex;align-items:center;justify-content:space-between;gap:16px;height:62px;}
+  .irow .il{display:flex;flex-direction:column;gap:4px;}
+  .irow .lbl{font-size:17px;color:var(--ink-muted);letter-spacing:.04em;}
+  .irow .nm{font-size:19px;color:var(--ink);}
+  .irow .ir{display:flex;align-items:center;gap:12px;flex:none;text-align:right;}
+  .irow .badge{background:var(--gold-lift);color:#0a0a0c;font-size:13px;font-weight:700;
+      padding:3px 9px;border-radius:999px;}
+  .irow .qty{font-size:13px;color:var(--ink-muted);font-variant-numeric:tabular-nums;}
+  .irow .amt{font-size:19px;color:var(--ink);font-variant-numeric:tabular-nums;min-width:86px;}
+  .ihr{height:1px;width:100%;background:var(--line);transform:scaleX(0);transform-origin:left;}
+  #isub,#idisc{display:flex;justify-content:space-between;align-items:center;height:44px;font-size:19px;}
+  #isub span:first-child,#idisc span:first-child{color:var(--ink-muted);}
+  #isub span:last-child{font-variant-numeric:tabular-nums;}
+  #idisc span:last-child{color:var(--gold);font-variant-numeric:tabular-nums;}
+  #itotal{position:relative;display:flex;justify-content:space-between;align-items:center;height:70px;}
+  #itotal span:first-child{font-size:21px;color:var(--ink-muted);}
+  #total-num{font-size:54px;font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums;}
+  #tglow{position:absolute;right:-40px;top:-10px;width:320px;height:150px;
+      background:radial-gradient(closest-side,rgba(226,184,119,.5),transparent 72%);opacity:0;}
+  #ichat{position:relative;margin-top:26px;height:84px;border-radius:22px;
+      background-color:#f2d5a8;
+      background-image:linear-gradient(100deg,#f6dcb4,#e8c288 58%,#cf9d55);color:#14100a;
+      font-size:21px;font-weight:600;display:flex;align-items:center;justify-content:center;}
+  #ihalo{position:absolute;left:-14px;right:-14px;top:-12px;bottom:-12px;border-radius:34px;
+      border:1px solid rgba(226,184,119,.55);opacity:0;}
+
+  /* ---------- scene 6 · order ready + lockup ---------- */
+  #sent-bg{position:absolute;inset:0;background:var(--bg);}
+  #ring{position:absolute;left:450px;top:640px;width:180px;height:180px;}
+  #ring svg{position:absolute;inset:0;overflow:visible;}
+  #ring circle,#ring path{fill:none;stroke:var(--gold);stroke-linecap:round;}
+  #rready{position:absolute;left:0;right:0;top:930px;text-align:center;font-size:96px;
+      font-weight:500;letter-spacing:-.02em;color:var(--ink);opacity:0;}
+  #rready .gold{letter-spacing:-.01em;}
+  #lockup{position:absolute;left:0;right:0;top:1240px;display:flex;flex-direction:column;
+      align-items:center;gap:30px;opacity:0;}
+  #lockup .ln{width:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+  #lockup .wm{font-size:22px;font-weight:600;letter-spacing:.28em;color:var(--ink);
+      font-family:'Fraunces',serif;}
+  #lockup .sub{font-size:24px;font-weight:400;color:var(--ink-muted);font-family:'Fraunces',serif;}
+
+  /* ---------- cursor + flying chips ---------- */
+  #cursor{position:absolute;left:0;top:0;z-index:6;opacity:0;}
+  #cursor .ring{position:absolute;left:-22px;top:-22px;width:44px;height:44px;border-radius:50%;
+      border:2px solid rgba(244,241,234,.9);box-shadow:0 0 26px rgba(255,255,255,.28);}
+  #cursor .dot{position:absolute;left:-5px;top:-5px;width:10px;height:10px;border-radius:50%;
+      background:#f4f1ea;box-shadow:0 0 14px rgba(255,255,255,.5);}
+  #chips{z-index:5;}
+  .chip{position:absolute;width:88px;height:88px;border-radius:16px;background:rgba(18,18,22,.94);
+      border:1px solid rgba(255,255,255,.1);background-size:66px 66px;background-position:center;
+      background-repeat:no-repeat;display:flex;align-items:center;justify-content:center;opacity:0;}
+  #chip-strap{background-image:url("assets/img/thumb-shoulder-strap.png");}
+  #chip-cap{background-image:url("assets/img/thumb-lens-cap.png");}
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="mirage-tiktok" data-root="true" data-start="0"
+     data-width="1080" data-height="1920" data-duration="21.0" data-fps="30">
+
+  <div id="bg"></div>
+  <div id="stage-glow"></div>
+  <div id="stage-floor"></div>
+  <div id="grain"></div>
+  <div id="hair-in"></div>
+
+  <!-- ================= SCENE 1 · hook ================= -->
+  <section id="s1" class="clip" data-start="0" data-duration="2.6">
+    <p class="eyebrow" id="s1-eyebrow">MIRAGE · Camera Atelier</p>
+    <h1 id="h1" class="serif">High afford.<br><span class="gold-text gold-italic">Pretty price, pretty quality.</span></h1>
+    <p id="s1-price">From $280</p>
+  </section>
+
+  <!-- ================= SCENE 2 · price hero ================= -->
+  <section id="price-layer" class="clip" data-start="2.6" data-duration="2.6">
+    <p class="eyebrow" id="ph-spec">24MP Full-Frame Sensor</p>
+    <div id="ph-wrap">
+      <div id="ph-ln"></div>
+      <div id="ph-num" data-layout-ignore="true">
+        <span class="g">$</span>
+        <span class="dc" id="ph0"><span class="ds"><b></b><b>0</b><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><b>6</b><b>7</b><b>8</b><b>9</b></span></span>
+        <span class="dc" id="ph1"><span class="ds"><b></b><b>0</b><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><b>6</b><b>7</b><b>8</b><b>9</b></span></span>
+        <span class="dc" id="ph2"><span class="ds"><b></b><b>0</b><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><b>6</b><b>7</b><b>8</b><b>9</b></span></span>
+        <span class="g">.</span>
+        <span class="dc" id="ph3"><span class="ds"><b></b><b>0</b><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><b>6</b><b>7</b><b>8</b><b>9</b></span></span>
+        <span class="dc" id="ph4"><span class="ds"><b></b><b>0</b><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><b>6</b><b>7</b><b>8</b><b>9</b></span></span>
+      </div>
+      <p class="serif" id="ph-name">Aurora X7</p>
+      <p id="ph-save">Was $410 · You save $61.50</p>
+    </div>
+  </section>
+
+  <!-- ================= SCENES 3-5 · app chrome ================= -->
+  <div id="app-layer" class="clip" data-start="5.2" data-duration="12.8">
+    <div id="app-inner" data-layout-ignore="">
+      <!-- top bar -->
+      <div id="app-top">
+        <div id="app-mark" class="wordmark serif gold-text">MIRAGE</div>
+        <div id="bag">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#f4f1ea"
+               stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 8h14l-1.1 11.2A2 2 0 0 1 15.9 21H8.1a2 2 0 0 1-2-1.8L5 8Z" />
+            <path d="M9 8V6a3 3 0 0 1 6 0v2" />
+          </svg>
+          <div id="badge">
+            <span id="b1">1</span><span id="b2" style="visibility:hidden">2</span><span id="b3" style="visibility:hidden">3</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- progress rail -->
+      <div id="progress">
+        <div id="rail">
+          <div class="pstep" id="ps1">
+            <div class="pbar"><i id="pb1"></i></div>
+            <span class="pdot done" id="pd1"></span>
+            <span class="p-label on">Stage</span>
+          </div>
+          <div class="pstep" id="ps2">
+            <div class="pbar"><i id="pb2"></i></div>
+            <span class="pdot" id="pd2"></span>
+            <span class="p-label">Camera</span>
+          </div>
+          <div class="pstep" id="ps3">
+            <div class="pbar"><i id="pb3"></i></div>
+            <span class="pdot" id="pd3"></span>
+            <span class="p-label">Kit</span>
+          </div>
+          <div class="pstep" id="ps4">
+            <div class="pbar"><i id="pb4"></i></div>
+            <span class="pdot" id="pd4"></span>
+            <span class="p-label">Review</span>
+          </div>
+          <div class="pstep" id="ps5">
+            <div class="pbar"><i id="pb5"></i></div>
+            <span class="pdot" id="pd5"></span>
+            <span class="p-label">Sent</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- back -->
+      <div id="back">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d8d2c6"
+             stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15 5l-7 7 7 7" />
+        </svg>
+        <span>Back</span>
+      </div>
+
+      <!-- spec pill -->
+      <div id="spec-pill">
+        <span id="sp1">24MP Full-Frame Sensor</span>
+        <span id="sp2" style="visibility:hidden">33MP Stacked CMOS · 8K</span>
+      </div>
+
+      <!-- product card -->
+      <div id="card">
+        <div id="c-kick" class="eyebrow">STEP 1 OF 3 · YOUR CAMERA</div>
+        <div id="c-kick-2" class="eyebrow">STEP 2 OF 3 · YOUR KIT</div>
+        <h2 id="c-title-1" class="serif" style="visibility:hidden">Aurora X7</h2>
+        <h2 id="c-title-2" class="serif">Make it yours.</h2>
+        <h2 id="c-title-5" class="serif" style="visibility:hidden">Vela Pro</h2>
+        <h2 id="c-title-3" class="serif" style="visibility:hidden">Woven Shoulder Strap</h2>
+        <h2 id="c-title-4" class="serif" style="visibility:hidden">Locking Lens Cap</h2>
+        <p class="sub" id="c-sub-1" style="visibility:hidden">Matte Black · 1 in your kit</p>
+        <p class="sub" id="c-sub-2">Make it yours — pick your extras</p>
+        <p class="sub" id="c-sub-3" style="visibility:hidden">1 item in your kit</p>
+        <p class="sub" id="c-sub-4" style="visibility:hidden">2 items in your kit</p>
+        <p class="sub" id="c-sub-5" style="visibility:hidden">Gunmetal · 1 in your kit</p>
+      </div>
+
+      <!-- stage ring + model -->
+      <div id="stage-ring">
+        <div id="ring-glow"></div>
+        <img id="p-aurora" src="assets/img/stage-aurora-x7.png" alt="Aurora X7">
+        <img id="p-vela" src="assets/img/stage-vela-pro.png" alt="Vela Pro" style="visibility:hidden">
+      </div>
+
+      <!-- model rail + accessory grid (toggle via rail cards) -->
+      <div id="rail-wrap" data-layout-ignore="true">
+        <div id="model-rail">
+          <div class="rcard" id="rc1"><img src="assets/img/thumb-aurora-x7.png" alt="Aurora X7">
+            <div class="scrim"></div><div class="idx">01</div><div class="on">×1</div>
+            <div class="meta"><div class="nm">Aurora X7</div><div class="pr">$410</div></div>
+            <div class="disc">−15%</div><div class="sel" id="rs1"></div></div>
+          <div class="rcard" id="rc2"><img src="assets/img/thumb-vela-pro.png" alt="Vela Pro">
+            <div class="scrim"></div><div class="idx">02</div><div class="on">×1</div>
+            <div class="meta"><div class="nm">Vela Pro</div><div class="pr">$460</div></div>
+            <div class="disc">−10%</div><div class="sel" id="rs2"></div></div>
+          <div class="rcard" id="rc3"><img src="assets/img/thumb-drift-mini.png" alt="Drift Mini">
+            <div class="scrim"></div><div class="idx">03</div>
+            <div class="meta"><div class="nm">Drift Mini</div><div class="pr">$280</div></div>
+            <div class="disc">−15%</div><div class="sel" id="rs3"></div></div>
+          <div class="rcard" id="rc4">
+            <div class="nova-swatch"><span class="nova-label">Nova Lite</span></div><div class="scrim"></div><div class="idx">04</div>
+            <div class="meta"><div class="nm">Nova Lite</div><div class="pr">$199</div></div>
+            <div class="nodisc">no discount</div><div class="sel" id="rs4"></div></div>
+        </div>
+        <div id="grid">
+          <div class="acard" id="ac1"><img src="assets/img/thumb-leather-keychain.png" alt="Leather Wrist Keychain">
+            <div><div class="nm">Leather Wrist Keychain</div><div class="pr">$19</div></div></div>
+          <div class="acard" id="ac2"><img src="assets/img/thumb-lens-cap.png" alt="Locking Lens Cap">
+            <div><div class="nm">Locking Lens Cap</div><div class="pr">$12</div></div>
+            <div class="on" id="ac2-on">×1</div></div>
+          <div class="acard" id="ac3"><img src="assets/img/thumb-shoulder-strap.png" alt="Woven Shoulder Strap">
+            <div><div class="nm">Woven Shoulder Strap</div><div class="pr">$29</div></div>
+            <div class="on" id="ac3-on">×1</div></div>
+          <div class="acard" id="ac4"><img src="assets/img/thumb-leather-backpack.png" alt="Vintage Leather Backpack">
+            <div><div class="nm">Vintage Leather Backpack</div><div class="pr">$149</div></div></div>
+        </div>
+      </div>
+
+      <!-- bottom bar -->
+      <div id="bar" data-layout-ignore="true">
+        <div class="left">
+          <div id="strike"><em id="strike-1">$410.00</em><em id="strike-2" style="visibility:hidden">$460.00</em></div>
+          <div id="save"><em id="save-1">You save $61.50</em><em id="save-2" style="visibility:hidden">You save $46.00</em></div>
+          <div id="roll" data-layout-ignore="true">
+            <span class="g">$</span>
+            <span class="dc" id="d0"><span class="ds"><b></b><b>0</b><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><b>6</b><b>7</b><b>8</b><b>9</b></span></span>
+            <span class="dc" id="d1"><span class="ds"><b></b><b>0</b><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><b>6</b><b>7</b><b>8</b><b>9</b></span></span>
+            <span class="dc" id="d2"><span class="ds"><b></b><b>0</b><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><b>6</b><b>7</b><b>8</b><b>9</b></span></span>
+            <span class="g">.</span>
+            <span class="dc" id="d3"><span class="ds"><b></b><b>0</b><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><b>6</b><b>7</b><b>8</b><b>9</b></span></span>
+            <span class="dc" id="d4"><span class="ds"><b></b><b>0</b><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><b>6</b><b>7</b><b>8</b><b>9</b></span></span>
+          </div>
+        </div>
+        <div id="kit-wrap">
+          <div class="kit" id="kit1" style="visibility:hidden">Kit $29</div>
+          <div class="kit" id="kit2" style="visibility:hidden">Kit $41</div>
+        </div>
+      </div>
+
+      <div id="stepper">
+        <span class="dim">−</span><span class="q" id="sq">1</span><span class="lit">+</span>
+      </div>
+      <div id="go">Continue</div>
+    </div>
+  </div>
+
+  <!-- ================= SCENE 5 · invoice ================= -->
+  <div id="invoice-layer" class="clip" data-start="15.0" data-duration="3.0">
+    <div id="invoice">
+      <div class="eyebrow kick">STEP 3 OF 3 · REVIEW</div>
+      <h2 class="serif">Invoice</h2>
+      <p id="oid">#CC-20260928-1426-37</p>
+      <div id="irows">
+        <div class="irow"><div class="il"><span class="lbl">Camera</span>
+          <span class="nm">Aurora X7 · Matte Black</span></div>
+          <div class="ir"><span class="badge">−15%</span><span class="amt">$410.00</span></div></div>
+        <div class="irow"><div class="il"><span class="lbl">Accessory</span>
+          <span class="nm">Woven Shoulder Strap</span></div>
+          <div class="ir"><span class="qty">×1</span><span class="amt">$29.00</span></div></div>
+        <div class="irow"><div class="il"><span class="lbl">Accessory</span>
+          <span class="nm">Locking Lens Cap</span></div>
+          <div class="ir"><span class="qty">×1</span><span class="amt">$12.00</span></div></div>
+      </div>
+      <div class="ihr" id="hr1"></div>
+      <div id="isub"><span>Subtotal</span><span>$451.00</span></div>
+      <div id="idisc"><span>Discount</span><span>−$61.50</span></div>
+      <div class="ihr" id="hr2"></div>
+      <div id="itotal"><span>Total</span><span id="total-num">$389.50</span><div id="tglow"></div></div>
+      <div id="ichat">Send to shop chat<div id="ihalo"></div></div>
+    </div>
+  </div>
+
+  <!-- ================= SCENE 6 · order ready + lockup ================= -->
+  <div id="sent-layer" class="clip" data-start="18.0" data-duration="3.0">
+    <div id="sent-bg"></div>
+    <div id="ring">
+      <svg viewBox="0 0 180 180">
+        <circle cx="90" cy="90" r="76" stroke-width="2.5" pathLength="1"
+                stroke-dasharray="1" stroke-dashoffset="1" id="r-ring" />
+        <path d="M63 92 L81 110 L118 70" stroke-width="6" pathLength="1"
+              stroke-dasharray="1" stroke-dashoffset="1" id="r-tick" />
+      </svg>
+    </div>
+    <p id="rready" class="serif">Order <span class="gold-text gold-italic">ready</span></p>
+    <div id="lockup">
+      <div class="ln" id="ln1"></div>
+      <div class="wm serif gold-text">MIRAGE</div>
+      <div class="ln" id="ln2"></div>
+      <div class="sub gold-text" id="ph-lock">From $280</div>
+    </div>
+  </div>
+
+  <!-- ================= overlays ================= -->
+  <div id="chips">
+    <div class="chip" id="chip-strap"></div>
+    <div class="chip" id="chip-cap"></div>
+  </div>
+  <div id="cursor"><div class="ring"></div><div class="dot"></div></div>
+  <div id="vignette"></div>
+  <div id="outro"></div>
+
+  <!-- ================= audio ================= -->
+  <audio id="bed" data-layout-ignore="true" data-start="0" data-duration="21.0"
+    data-track-index="10"
+    data-automation='{"version":1,"lanes":[{"target":"volume","points":[{"t":0,"v":0},{"t":1.6,"v":0.30},{"t":19.6,"v":0.30},{"t":21.0,"v":0}]}]}'
+    src="assets/music/happy-beats-business-moves-vol-12-by-ende-dot-app.mp3"></audio>
+
+  <!-- hook arrival -->
+  <audio id="sfx-open-1" data-layout-ignore="true" data-start="0.12" data-duration="0.2"
+    data-track-index="11" data-volume="0.42"
+    src="assets/sfx/impact/impactSoft_medium_001.ogg"></audio>
+  <!-- price locks on beat 3.8197 (silent under the number) -->
+  <!-- body swap tap → 8.74 -->
+  <audio id="sfx-tap-vela" data-layout-ignore="true" data-start="8.74" data-duration="0.05"
+    data-track-index="11" data-volume="0.58"
+    src="assets/sfx/interface/select_008.ogg"></audio>
+  <!-- accessory chip landings → 13.11 & 14.20 -->
+  <audio id="sfx-landing-1" data-layout-ignore="true" data-start="13.11" data-duration="0.18"
+    data-track-index="11" data-volume="0.64"
+    src="assets/sfx/interface/drop_002.ogg"></audio>
+  <audio id="sfx-landing-2" data-layout-ignore="true" data-start="14.20" data-duration="0.18"
+    data-track-index="11" data-volume="0.64"
+    src="assets/sfx/interface/drop_002.ogg"></audio>
+  <!-- handoff ring draw → bell at 18.12 -->
+  <audio id="sfx-bell" data-layout-ignore="true" data-start="18.12" data-duration="1.4"
+    data-track-index="11" data-volume="0.48"
+    src="assets/sfx/impact/impactBell_heavy_000.ogg"></audio>
+  <!-- lockup lands on 19.66 (silent) -->
+</body>
+<script src="assets/vendor/gsap.min.js"></script>
+<script src="assets/music/audio-data.js"></script>
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+
+  var E_SNAP = 'power3.out', E_SOFT = 'power2.inOut', E_POP = 'back.out(2.0)', E_POP2 = 'back.out(1.6)';
+
+  var tl = gsap.timeline({ paused: true });
+
+  /* baseline discipline: first fromTo owns resting state; later ones skip immediateRender */
+  var touched = Object.create(null);
+  function fb(sel, v) {
+    if (touched[sel]) { v = Object.assign({}, v); v.immediateRender = false; }
+    touched[sel] = 1;
+    return v;
+  }
+  function X(sel, from, to, pos) { tl.fromTo(sel, from, fb(sel, to), pos); }
+
+  /* two-line clear swap: outgoing clears fully before incoming starts, so both
+     names are never legible at once — the eye always has one winner. */
+  function swap(offSel, onSel, t, dur) {
+    var out = dur * 0.45;
+    X(offSel, { autoAlpha: 1 }, { autoAlpha: 0, duration: out, ease: E_SNAP }, t);
+    X(onSel, { autoAlpha: 0 }, { autoAlpha: 1, duration: dur - out, ease: E_SNAP }, t + out);
+  }
+  function pop(sel, t, s) {
+    s = s || 0.86;
+    X(sel, { scale: 1 }, { scale: s, duration: 0.13, ease: E_POP }, t);
+    tl.to(sel, { scale: 1, duration: 0.34, ease: E_POP }, t + 0.14);
+  }
+  function move(x, y, t, dur) { tl.to('#cursor', { x: x, y: y, duration: dur, ease: E_SOFT }, t); }
+  function click(x, y, t, dur) { move(x, y, t - 0.4, dur || 0.28); pop('#cursor', t); }
+
+  /* ---------- progress rail: bars fill, done steps get a check, current step glows ---------- */
+  var GOLD = '#f4f1ea', FAINT = '#8e877c';
+  function rail(to, t) {
+    for (var i = 1; i <= 5; i++) {
+      var n = i, sel = '#ps' + n;
+      if (n <= to) {
+        if (n < to) { tl.set('#pd' + n, { className: 'pdot done' }, t); }
+        else { tl.set('#pd' + n, { className: 'pdot on' }, t); }
+        tl.set(sel + ' .p-label', { color: n === to ? GOLD : FAINT }, t);
+      } else {
+        tl.set('#pd' + n, { className: 'pdot' }, t);
+        tl.set(sel + ' .p-label', { color: FAINT }, t);
+      }
+    }
+  }
+  function bump(sel, t, s, hold) {
+    X(sel, { scale: 1 }, { scale: s, duration: 0.16, ease: E_POP2 }, t);
+    tl.to(sel, { scale: 1, duration: hold || 0.34, ease: E_POP2 }, t + 0.17);
+  }
+
+  /* ---------- digit odometers ----------
+     Each column is a full 0-9 strip translated by rest(d). Every tween carries an
+     absolute from AND to, so scrubbing anywhere in the timeline resolves the
+     right column value regardless of play order. `cur` tracks the digits on
+     screen so consecutive rolls continue from the previous landing value
+     instead of snapping, and unchanged columns are skipped entirely. */
+  function makeOdometer(cols, row, start) {
+    var rest = function (d) { return -(d + 1) * row; };
+    var cur = start.slice();
+    cols.forEach(function (el, i) { el.style.transform = 'translateY(' + rest(cur[i]) + 'px)'; });
+    return function (digits, t, dur, ease) {
+      for (var i = 0; i < 5; i++) {
+        if (digits[i] === cur[i]) continue;
+        tl.fromTo(cols[i], { y: rest(cur[i]) },
+          { y: rest(digits[i]), duration: dur, ease: ease || E_SNAP, immediateRender: false }, t);
+      }
+      cur = digits.slice();
+    };
+  }
+
+  var ROW = 66;
+  var roll = makeOdometer(
+    [$('d0'), $('d1'), $('d2'), $('d3'), $('d4')].map(function (el) { return el.firstElementChild; }),
+    ROW, [3, 4, 8, 5, 0]);
+
+  /* price-hero odometer: same strip logic, larger row (font-size 150) */
+  var P_ROW = 170;
+  var phRoll = makeOdometer(
+    [$('ph0'), $('ph1'), $('ph2'), $('ph3'), $('ph4')].map(function (el) { return el.firstElementChild; }),
+    P_ROW, [0, 0, 0, 0, 0]);
+
+  /* ================= SCENE 1 · hook ================= */
+  X('#hair-in', { scaleX: 0 }, { scaleX: 1, duration: 1.0, ease: E_SOFT }, 0.30);
+  X('#s1-eyebrow', { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.6, ease: E_SNAP }, 0.18);
+  X('#h1', { autoAlpha: 0, y: 28 }, { autoAlpha: 1, y: 0, duration: 0.8, ease: E_SNAP }, 0.34);
+  X('#h1 .gold-text', { autoAlpha: 0, y: 18 }, { autoAlpha: 1, y: 0, duration: 0.7, ease: E_SNAP }, 1.09);
+  X('#s1-price', { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: 0.55, ease: E_SNAP }, 1.32);
+
+  /* ================= SCENE 2 · price hero ================= */
+  X('#ph-spec', { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.5, ease: E_SNAP }, 2.70);
+  X('#ph-ln', { scaleX: 0 }, { scaleX: 1, duration: 0.6, ease: E_SOFT }, 2.88);
+   phRoll([3,4,8,5,0], 2.85, 0.95, E_SNAP); /* lands exactly on beat 3.8197 */
+  X('#ph-name', { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: 0.55, ease: E_SNAP }, 3.95);
+  X('#ph-save', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.45, ease: E_SNAP }, 4.10);
+  X('#hair-in', { scaleX: 1 }, { scaleX: 0, duration: 0.34, ease: E_SNAP }, 2.55);
+
+  /* ================= SCENE 3 · app chrome arrives ================= */
+  X('#app-inner', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.34, ease: E_SNAP }, 5.20);
+  X('#app-mark', { autoAlpha: 0, y: -18 }, { autoAlpha: 1, y: 0, duration: 0.6, ease: E_SNAP }, 5.20);
+  X('#bag', { autoAlpha: 0, y: -18 }, { autoAlpha: 1, y: 0, duration: 0.6, ease: E_SNAP }, 5.30);
+  X('#pb1', { scaleX: 0 }, { scaleX: 1, duration: 0.6, ease: E_SOFT }, 5.26);
+  X('#back', { autoAlpha: 0, x: -20 }, { autoAlpha: 1, x: 0, duration: 0.55, ease: E_SNAP }, 5.44);
+  X('#spec-pill', { autoAlpha: 0, x: 20 }, { autoAlpha: 1, x: 0, duration: 0.55, ease: E_SNAP }, 5.50);
+   X('#card', { autoAlpha: 0, y: 28, scale: 0.985 },
+     { autoAlpha: 1, y: 0, scale: 1, duration: 0.7, ease: E_SNAP }, 5.36);
+   X('#stage-ring', { autoAlpha: 0, y: 42, scale: 0.94 },
+    { autoAlpha: 1, y: 0, scale: 1, duration: 0.8, ease: E_SNAP }, 5.50);
+  X('#strike, #save, #roll', { autoAlpha: 0, y: 14 },
+    { autoAlpha: 1, y: 0, duration: 0.55, ease: E_SNAP }, 5.52);
+  X('#stepper', { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.5, ease: E_SNAP }, 5.66);
+  X('#go', { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.55, ease: E_SNAP }, 5.72);
+   /* rail cards 2-4 build in; card 1 (Aurora) is the selected one at Scene start */
+   /* c-title-2 is visible from the markup; the 5.40 swap hands off to Aurora.
+      No separate entrance tween here, or it would win the timeline and resurface
+      "Make it yours." on top of every later title. */
+   tl.set('#rs1', { autoAlpha: 1 }, 5.30);
+   tl.set('#rc1 .on', { autoAlpha: 1 }, 5.30);
+   /* Camera step is live: Aurora is the current pick, so its bar fills */
+   X('#pb2', { scaleX: 0 }, { scaleX: 1, duration: 0.55, ease: E_SOFT }, 5.32);
+   rail(2, 5.30);
+   swap('#c-title-2', '#c-title-1', 5.40, 0.2);
+   X('#rc2', { autoAlpha: 0, y: 26 }, { autoAlpha: 1, y: 0, duration: 0.5, ease: E_SNAP }, 5.34);
+   X('#rc3', { autoAlpha: 0, y: 26 }, { autoAlpha: 1, y: 0, duration: 0.5, ease: E_SNAP }, 6.00);
+   X('#rc4', { autoAlpha: 0, y: 26 }, { autoAlpha: 1, y: 0, duration: 0.5, ease: E_SNAP }, 6.56);
+   X('#rs2', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.26, ease: E_SNAP }, 8.74);
+   /* hero idle float */
+   X('#stage-ring', { y: 0 }, { y: -10, duration: 1.9, ease: 'sine.inOut', yoyo: true, repeat: 3 }, 7.00);
+   X('#ring-glow', { autoAlpha: 0.75 }, { autoAlpha: 1, duration: 1.9, ease: 'sine.inOut', yoyo: true, repeat: 3 }, 7.00);
+
+   /* cursor arrives, then taps Vela Pro on the 8.74 strong cue */
+   tl.set('#cursor', { x: 612, y: 1660 }, 5.0);
+   X('#cursor', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.3, ease: E_SNAP }, 5.0);
+   move(610, 1420, 6.88, 0.6);
+   /* tap Vela Pro */
+   click(426, 1418, 8.74, 0.55);
+   tl.set('#rs1', { autoAlpha: 0 }, 8.74);
+   tl.set('#rs2', { autoAlpha: 1 }, 8.74);
+   swap('#p-aurora', '#p-vela', 8.74, 0.22);
+   swap('#c-title-1', '#c-title-5', 8.74, 0.18);
+   swap('#c-sub-1', '#c-sub-5', 8.74, 0.18);
+   swap('#sp1', '#sp2', 8.74, 0.16);
+   swap('#strike-1', '#strike-2', 8.74, 0.16);
+   swap('#save-1', '#save-2', 8.74, 0.16);
+   X('#rc1 .on', { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.18, ease: 'none' }, 8.74);
+   X('#rc2 .on', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.18, ease: E_SNAP }, 8.85);
+   roll([4,1,4,0,0], 8.74, 0.4);
+   bump('#badge', 8.81, 1.22);
+   /* $414.00 holds a full 1.06s, then silently tap back to Aurora */
+   click(198, 1418, 9.80, 0.22);
+   tl.set('#rs2', { autoAlpha: 0 }, 9.80);
+   tl.set('#rs1', { autoAlpha: 1 }, 9.80);
+   swap('#p-vela', '#p-aurora', 9.80, 0.22);
+   swap('#c-title-5', '#c-title-1', 9.80, 0.18);
+   swap('#c-sub-5', '#c-sub-1', 9.80, 0.18);
+   swap('#sp2', '#sp1', 9.80, 0.16);
+   swap('#strike-2', '#strike-1', 9.80, 0.16);
+   swap('#save-2', '#save-1', 9.80, 0.16);
+   X('#rc2 .on', { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.18, ease: 'none' }, 9.80);
+   X('#rc1 .on', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.18, ease: E_SNAP }, 9.91);
+   roll([3,4,8,5,0], 9.80, 0.4);
+   bump('#badge', 9.87, 1.22);
+
+   /* ================= SCENE 4 · kit flight ================= */
+   /* rail advances to Kit: Camera done, Kit current */
+   X('#pb3', { scaleX: 0 }, { scaleX: 1, duration: 0.55, ease: E_SOFT }, 10.20);
+   rail(3, 10.20);
+   /* swap the card title/sub to the kit step */
+   swap('#c-kick', '#c-kick-2', 10.20, 0.16);
+   swap('#c-title-1', '#c-title-3', 10.20, 0.16);
+   swap('#c-sub-1', '#c-sub-2', 10.20, 0.18);
+   /* model rail fades out, accessory grid in */
+   X('#model-rail', { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.28, ease: E_SNAP }, 10.20);
+   X('#grid', { autoAlpha: 0, y: 28 }, { autoAlpha: 1, y: 0, duration: 0.5, ease: E_SNAP }, 10.20);
+   X('#stage-ring', { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.24, ease: E_SNAP }, 10.20);
+   X('#back', { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.24, ease: E_SNAP }, 10.20);
+   X('#spec-pill', { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.24, ease: E_SNAP }, 10.20);
+   X('#strike, #save', { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.2, ease: 'none' }, 10.20);
+   X('#stepper', { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.2, ease: 'none' }, 10.20);
+   /* accessory cards on the beat grid */
+   [['#ac1', 10.93], ['#ac2', 11.46], ['#ac3', 12.02], ['#ac4', 12.55]].forEach(function (p) {
+     X(p[0], { autoAlpha: 0, y: 22 }, { autoAlpha: 1, y: 0, duration: 0.42, ease: E_SNAP }, p[1]);
+   });
+   /* tap Woven Shoulder Strap (ac3, row 2 col 1) -> chip arcs into the bag, landing on 13.11 */
+   X('#cursor', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.24, ease: E_SNAP }, 12.30);
+   click(393, 1461, 12.62, 0.26);
+   /* keyframes: lift out of the card, then arc to the bag. Total 12.62 + 0.49 = 13.11. */
+   tl.fromTo('#chip-strap',
+     { x: 349, y: 1417, autoAlpha: 0, scale: 0.8, rotation: 0 },
+     { keyframes: [
+         { autoAlpha: 1, scale: 1, duration: 0.16, ease: E_POP },
+         { x: 953, y: 89, scale: 0.42, rotation: 16, duration: 0.33, ease: E_SNAP }
+       ] }, 12.62);
+   tl.to('#chip-strap', { autoAlpha: 0, duration: 0.16, ease: E_SNAP }, 13.11);
+   bump('#bag', 13.11, 1.16, 0.42);
+   swap('#b1', '#b2', 13.14, 0.14);
+   bump('#badge', 13.14, 1.28, 0.36);
+   swap('#c-sub-2', '#c-sub-3', 13.14, 0.18);
+   X('#c-title-3', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.18, ease: E_SNAP }, 13.14);
+   X('#ac3-on', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.18, ease: E_SNAP }, 13.20);
+   X('#kit1', { autoAlpha: 0, visibility: 'hidden' }, { autoAlpha: 1, visibility: 'visible', duration: 0.24, ease: E_SNAP }, 13.20);
+   roll([3,7,7,5,0], 13.20, 0.32); /* $377.50 */
+
+   /* tap Locking Lens Cap (ac2, row 1 col 2) -> lands on 14.20 */
+   click(687, 1336, 13.72, 0.26);
+   tl.fromTo('#chip-cap',
+     { x: 643, y: 1292, autoAlpha: 0, scale: 0.8, rotation: 0 },
+     { keyframes: [
+         { autoAlpha: 1, scale: 1, duration: 0.16, ease: E_POP },
+         { x: 953, y: 89, scale: 0.42, rotation: -14, duration: 0.32, ease: E_SNAP }
+       ] }, 13.72);
+   tl.to('#chip-cap', { autoAlpha: 0, duration: 0.16, ease: E_SNAP }, 14.20);
+   bump('#bag', 14.20, 1.16, 0.42);
+   swap('#b2', '#b3', 14.24, 0.14);
+   bump('#badge', 14.24, 1.28, 0.36);
+   swap('#c-title-3', '#c-title-4', 14.24, 0.18);
+   swap('#c-sub-3', '#c-sub-4', 14.24, 0.18);
+   swap('#kit1', '#kit2', 14.24, 0.18); /* $41 */
+   X('#ac2-on', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.18, ease: E_SNAP }, 14.24);
+   roll([3,8,9,5,0], 14.24, 0.32); /* $389.50 */
+   /* press Continue toward Review — the CTA stays live through Kit */
+   click(540, 1784, 14.62, 0.18);
+   pop('#go', 14.62, 0.97);
+   tl.to('#cursor', { autoAlpha: 0, duration: 0.22, ease: E_SNAP }, 14.92);
+
+  /* ================= SCENE 5 · invoice ================= */
+  var V = 15.0;
+  /* rail advances to Review as the invoice takes over */
+  X('#pb4', { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: E_SOFT }, V);
+  rail(4, V);
+  tl.to('#app-inner', { autoAlpha: 0.16, duration: 0.42, ease: E_SNAP }, V);
+  X('#invoice', { autoAlpha: 0, y: 46, scale: 0.965 },
+    { autoAlpha: 1, y: 0, scale: 1, duration: 0.62, ease: E_SNAP }, V);
+  X('#invoice h2', { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.5, ease: E_SNAP }, V + 0.14);
+  X('#oid', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.45, ease: E_SNAP }, V + 0.20);
+  /* rows as a group */
+  [['#irows .irow:nth-child(1)', V + 0.54],
+   ['#irows .irow:nth-child(2)', V + 0.70],
+   ['#irows .irow:nth-child(3)', V + 0.86]].forEach(function (p) {
+    X(p[0], { autoAlpha: 0, x: -18 }, { autoAlpha: 1, x: 0, duration: 0.46, ease: E_SNAP }, p[1]);
+  });
+  X('#hr1', { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: E_SOFT }, V + 1.10);
+  X('#isub', { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.44, ease: E_SNAP }, V + 1.26);
+  X('#idisc', { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.44, ease: E_SNAP }, V + 1.50);
+  X('#hr2', { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: E_SOFT }, V + 1.74);
+  X('#total-num', { autoAlpha: 0, y: 18, scale: 0.94 },
+    { autoAlpha: 1, y: 0, scale: 1, duration: 0.55, ease: E_POP }, V + 1.93);
+   /* CTA breathes twice while the invoice settles; the second cycle ends at 17.98,
+      fully inside the 15.0-18.0 clip so nothing straddles the cut to order-ready */
+   [V + 2.00, V + 2.40].forEach(function (t) {
+     X('#ihalo', { autoAlpha: 0, scale: 0.98 },
+       { autoAlpha: 0.8, scale: 1.014, duration: 0.29, ease: E_SOFT }, t);
+     tl.to('#ihalo', { autoAlpha: 0, scale: 1.032, duration: 0.29, ease: E_SOFT }, t + 0.29);
+   });
+   /* cursor returns and presses send on the real centre of #ichat (540, 1163) */
+   click(540, 1163, V + 2.85, 0.3);
+  pop('#ichat', V + 2.85, 0.975);
+  tl.to('#cursor', { autoAlpha: 0, duration: 0.26, ease: E_SNAP }, V + 3.15);
+
+  /* ================= SCENE 6 · order ready + lockup ================= */
+  var W = 18.0;
+  /* rail completes to Sent */
+  X('#pb5', { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: E_SOFT }, W + 0.06);
+  rail(5, W + 0.06);
+  /* ring draws */
+  X('#ring', { autoAlpha: 0, scale: 0.42 }, { autoAlpha: 1, scale: 1, duration: 0.6, ease: E_POP }, W + 0.12);
+  X('#r-ring', { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.52, ease: E_SOFT }, W + 0.20);
+  X('#r-tick', { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.3, ease: E_SOFT }, W + 0.42);
+  /* Order ready on the 18.56 strong cue */
+  X('#rready', { autoAlpha: 0, y: 22 }, { autoAlpha: 1, y: 0, duration: 0.62, ease: E_SNAP }, 18.56);
+  /* lockup on the 19.66 strong cue */
+  X('#lockup', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.4, ease: E_SNAP }, 19.66);
+  X('#ln1', { width: 0 }, { width: 250, duration: 0.42, ease: E_SOFT }, 19.66);
+  X('#ln2', { width: 0 }, { width: 250, duration: 0.42, ease: E_SOFT }, 19.84);
+  X('#lockup .wm', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.4, ease: E_SNAP }, 19.84);
+  X('#ph-lock', { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: 0.45, ease: E_SNAP }, 19.92);
+  /* fade to black, landing exactly on the 21.0s cut */
+  tl.to('#outro', { autoAlpha: 1, duration: 0.24, ease: E_SNAP }, 20.76);
+
+  /* ---------- audio-reactive stage light, one seekable call per frame ---------- */
+  var AUD = window.MIRAGE_AUDIO.frames, glow = $('stage-glow'), tglow = $('tglow');
+  var END = 21.0, N = Math.min(AUD.length, Math.round(END * 30));
+  for (var i = 0; i < N; i++) {
+    (function (idx) {
+      var f = AUD[idx];
+      var bass = (f[0] + f[1] + f[2]) / 3, amp = 0;
+      for (var b = 3; b < f.length; b++) { if (f[b] > amp) amp = f[b]; }
+      var t = idx / 30, show = (t >= 15.0 && t < 18.0) ? 1 : 0;
+      tl.call(function () {
+        glow.style.transform = 'translate(0,' + (-10 - bass * 24).toFixed(2) + 'px) scale(' + (1 + bass * 0.07).toFixed(4) + ')';
+        glow.style.opacity = (0.78 + amp * 0.5).toFixed(3);
+        tglow.style.opacity = (show * (0.28 + amp * 1.05)).toFixed(3);
+      }, null, t);
+    })(i);
+  }
+
+  window.__timelines = window.__timelines || {};
+  window.__timelines['mirage-tiktok'] = tl;
+})();
+</script>
+</body>
+</html>

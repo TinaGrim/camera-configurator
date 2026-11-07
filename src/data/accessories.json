@@ -1,0 +1,35 @@
+[
+  {
+    "id": "leather-keychain",
+    "name": "Leather Wrist Keychain",
+    "price": 19,
+    "thumbnail": "/thumbs/leather-keychain.png",
+    "attachPoint": "strapLug",
+    "spec": "Hand-stitched full-grain leather"
+  },
+  {
+    "id": "lens-cap",
+    "name": "Locking Lens Cap",
+    "price": 12,
+    "thumbnail": "/thumbs/lens-cap.png",
+    "attachPoint": "lensFront",
+    "spec": "Soft-close bayonet fit"
+  },
+  {
+    "id": "shoulder-strap",
+    "name": "Woven Shoulder Strap",
+    "price": 29,
+    "thumbnail": "/thumbs/shoulder-strap.png",
+    "attachPoint": "strapLug",
+    "spec": "Quick-release, waxed canvas"
+  },
+  {
+    "id": "leather-backpack",
+    "name": "Vintage Leather Backpack",
+    "price": 149,
+    "modelUrl": "/models/leather-backpack.glb",
+    "thumbnail": "/thumbs/leather-backpack.png",
+    "attachPoint": "strapLug",
+    "spec": "Full-grain leather, waxed canvas lining"
+  }
+]

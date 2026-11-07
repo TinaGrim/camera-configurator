@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>MIRAGE — Camera Atelier</title>
+<style>
+  /* local @font-face, inlined so the renderer resolves them against this file */
+  @font-face{font-family:'Fraunces';font-style:italic;font-weight:300 700;font-display:block;
+    src:url('assets/fonts/fraunces-italic-latin-ext.woff2') format('woff2');
+    unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;}
+  @font-face{font-family:'Fraunces';font-style:italic;font-weight:300 700;font-display:block;
+    src:url('assets/fonts/fraunces-italic-latin.woff2') format('woff2');
+    unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+  @font-face{font-family:'Fraunces';font-style:normal;font-weight:300 700;font-display:block;
+    src:url('assets/fonts/fraunces-normal-latin-ext.woff2') format('woff2');
+    unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;}
+  @font-face{font-family:'Fraunces';font-style:normal;font-weight:300 700;font-display:block;
+    src:url('assets/fonts/fraunces-normal-latin.woff2') format('woff2');
+    unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+  @font-face{font-family:'Inter';font-style:normal;font-weight:400 700;font-display:block;
+    src:url('assets/fonts/inter-normal-latin-ext.woff2') format('woff2');
+    unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;}
+  @font-face{font-family:'Inter';font-style:normal;font-weight:400 700;font-display:block;
+    src:url('assets/fonts/inter-normal-latin.woff2') format('woff2');
+    unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+</style>
+<style>
+  :root{
+    --bg:#0a0a0c; --panel:#121216;
+    --ink:#f4f1ea; --ink-soft:#d8d2c6; --ink-muted:#9d968a; --ink-faint:#8e877c;
+    --gold:#e2b877; --gold-deep:#b98a45; --gold-lift:#f2d5a8; --line:rgba(244,241,234,.12);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{background:#000;width:1080px;height:1920px;overflow:hidden;}
+  body{font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased;}
+
+  #root{position:relative;width:1080px;height:1920px;overflow:hidden;background:var(--bg);
+        font-family:'Inter',system-ui,sans-serif;color:var(--ink);}
+  .clip{position:absolute;inset:0;}
+  audio{display:block;width:0;height:0;overflow:hidden;}
+
+  /* ---------- persistent atmosphere ---------- */
+  #bg{position:absolute;inset:0;
+      background:radial-gradient(130% 74% at 50% 13%,#1a1712 0%,#101014 44%,#0a0a0c 100%);}
+  #stage-glow{position:absolute;left:50%;top:130px;width:1300px;height:1120px;margin-left:-650px;
+      background:radial-gradient(closest-side,rgba(226,184,119,.20),rgba(226,184,119,.05) 58%,transparent 76%);
+      transform:translate(0,-10px) scale(1);opacity:.85;}
+  #stage-floor{position:absolute;left:0;right:0;bottom:0;height:520px;
+      background:linear-gradient(to top,rgba(226,184,119,.055),transparent 72%);}
+  #grain{position:absolute;inset:0;opacity:.05;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");}
+  /* Keep the cinematic falloff, but stay light enough that the gold badge and
+     the primary CTA keep their contrast where the frame edges fall off. */
+  #vignette{position:absolute;inset:0;z-index:7;box-shadow:inset 0 0 300px 24px rgba(0,0,0,.34);}
+  #outro{position:absolute;inset:0;z-index:8;background:#000;opacity:0;}
+
+  .eyebrow{font-size:19px;letter-spacing:.28em;text-transform:uppercase;font-weight:500;
+      color:var(--ink-muted);font-family:'Inter',sans-serif;}
+  .wordmark{font-size:22px;font-weight:600;letter-spacing:.36em;color:var(--ink);}
+  .serif{font-family:'Fraunces',Georgia,serif;}
+  .abs{position:absolute;}
+
+  /* ---------- scene 1 · landing ---------- */
+  #s1{display:flex;flex-direction:column;align-items:center;
+      padding:70px 72px 64px;text-align:center;}
+  #s1-mark{margin-top:150px;}
+  #s1 .lead{margin-top:auto;margin-bottom:auto;}
+  #h1{font-size:118px;line-height:1.02;font-weight:500;letter-spacing:-.02em;color:var(--ink);}
+  #gold-line{font-size:64px;line-height:1.18;font-style:italic;font-weight:500;color:var(--gold);
+      margin-top:18px;}
+  #from{font-size:21px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-muted);margin-top:54px;}
+  #s1-h2{font-size:30px;line-height:1.5;font-weight:400;color:var(--ink-soft);margin-top:36px;
+      max-width:840px;}
+  #cta-tap{position:relative;margin-top:88px;width:216px;height:84px;border-radius:999px;
+      border:1px solid var(--line);display:flex;align-items:center;justify-content:center;
+      font-size:21px;font-weight:600;letter-spacing:.04em;color:var(--ink);
+      background:rgba(255,255,255,.035);}
+  #rim-sweep{position:absolute;left:-2px;right:-2px;top:-2px;bottom:-2px;border-radius:999px;
+      background:linear-gradient(90deg,transparent,rgba(226,184,119,.55),transparent);
+      transform:scaleX(0);opacity:0;pointer-events:none;}
+  #vline{position:absolute;left:539px;top:190px;width:2px;height:1540px;transform-origin:50% 0%;
+      background:linear-gradient(to bottom,transparent,rgba(226,184,119,.5),transparent);opacity:0;}
+  #hint{font-size:19px;letter-spacing:.24em;text-transform:uppercase;color:var(--ink-faint);margin-top:180px;}
+  #foot{font-size:16px;color:var(--ink-faint);margin-top:30px;}
+
+  /* ---------- app chrome (scenes 2-4) ---------- */
+  #app-inner{position:absolute;inset:0;}
+  #app-top{position:absolute;left:0;right:0;top:0;height:230px;
+      display:flex;align-items:flex-start;justify-content:space-between;padding:70px 46px 0;}
+  #app-mark{line-height:1;}
+  #bag{position:absolute;right:46px;top:96px;width:74px;height:74px;border-radius:22px;
+      background:#161619;border:1px solid #202023;
+      display:flex;align-items:center;justify-content:center;}
+  #badge{position:absolute;right:-8px;top:-8px;width:36px;height:36px;border-radius:50%;
+      background:var(--gold-lift);color:#0a0a0c;font-size:19px;font-weight:700;}
+  #badge span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+      background:var(--gold-lift);border-radius:50%;}
+
+  #progress{position:absolute;left:0;right:0;top:236px;display:flex;justify-content:center;gap:16px;
+      align-items:flex-start;padding:0 46px;}
+  .pstep{display:flex;flex-direction:column;align-items:center;gap:12px;flex:1;max-width:196px;}
+  .pbar{width:100%;height:2px;background:rgba(244,241,234,.10);position:relative;overflow:hidden;}
+  .pbar i{position:absolute;inset:0;background:var(--gold);transform:scaleX(0);transform-origin:left;}
+  .plabel{font-size:15px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);
+      text-align:center;white-space:nowrap;}
+
+  #back{position:absolute;left:46px;top:348px;display:flex;align-items:center;gap:14px;color:var(--ink-soft);}
+  #back span{font-size:19px;letter-spacing:.16em;text-transform:uppercase;}
+  #spec-pill{position:absolute;right:46px;top:342px;padding:15px 26px;border-radius:999px;
+      background:rgba(255,255,255,.06);font-size:21px;color:var(--ink-soft);
+      font-variant-numeric:tabular-nums;}
+
+  #card{position:absolute;left:42px;top:400px;width:996px;height:790px;border-radius:32px;
+      padding:44px;background:linear-gradient(150deg,rgba(255,255,255,.055),rgba(255,255,255,.018));
+      border:1px solid rgba(255,255,255,.07);}
+  #c-kick{position:absolute;left:44px;top:44px;}
+  #card h2{position:absolute;left:44px;right:44px;top:80px;font-size:56px;line-height:1.12;
+      font-weight:500;letter-spacing:-.015em;}
+  #card .sub{position:absolute;left:44px;right:44px;top:176px;font-size:21px;color:var(--ink-muted);}
+
+  #stage-ring{position:absolute;left:50%;top:632px;width:820px;height:520px;margin-left:-410px;}
+  #ring-glow{position:absolute;left:50%;top:-30px;width:720px;height:420px;margin-left:-360px;
+      border-radius:50%;background:radial-gradient(closest-side,rgba(226,184,119,.22),transparent 70%);}
+  #stage-ring img{position:absolute;left:50%;top:0;width:520px;margin-left:-260px;display:block;}
+
+  #rail-wrap{position:absolute;left:0;right:0;top:1320px;height:246px;}
+  #rail{position:absolute;left:90px;top:0;display:flex;gap:12px;}
+  .rcard{width:216px;height:196px;border-radius:20px;overflow:hidden;position:relative;
+      background:var(--panel);border:1px solid rgba(255,255,255,.07);}
+  .rcard img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+  .rcard .scrim{position:absolute;inset:0;
+      background:linear-gradient(to top,rgba(6,6,8,.95) 8%,rgba(6,6,8,.6) 46%,rgba(6,6,8,.45) 100%);}
+  .rcard .idx{position:absolute;right:12px;top:12px;font-size:17px;font-weight:500;color:#f4f1ea;
+      background:rgba(10,10,12,.74);border-radius:8px;padding:4px 9px;}
+  .rcard .on{position:absolute;left:14px;top:12px;font-size:14px;font-weight:600;color:#f4f1ea;
+      background:rgba(10,10,12,.74);border-radius:999px;padding:3px 10px;visibility:hidden;}
+  .rcard .meta{position:absolute;left:14px;right:14px;bottom:14px;}
+  .rcard .nm{font-size:18px;font-weight:600;color:var(--ink);}
+  .rcard .pr{font-size:17px;color:var(--ink-soft);margin-top:4px;font-variant-numeric:tabular-nums;}
+  .rcard .disc{position:absolute;right:0;bottom:0;background:var(--gold-lift);color:#0a0a0c;
+      font-size:14px;font-weight:700;padding:3px 9px;border-radius:999px;}
+  .rcard .sel{position:absolute;inset:0;border-radius:20px;border:1px solid rgba(226,184,119,.6);
+      box-shadow:inset 0 0 0 1px rgba(226,184,119,.18);opacity:0;}
+
+  #grid{position:absolute;left:253px;top:0;width:574px;display:flex;flex-wrap:wrap;gap:14px;}
+  .acard{position:relative;width:280px;height:111px;border-radius:18px;background:rgba(18,18,22,.78);
+      border:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:16px;padding:14px 16px;}
+  .acard img{width:82px;height:82px;object-fit:contain;flex:none;display:block;}
+  .acard .nm{font-size:18px;font-weight:600;color:var(--ink);line-height:1.25;}
+  .acard .pr{font-size:17px;color:var(--ink-soft);margin-top:7px;font-variant-numeric:tabular-nums;}
+  .acard .on{position:absolute;right:12px;top:10px;font-size:14px;font-weight:600;color:#f4f1ea;
+      background:rgba(10,10,12,.74);border-radius:999px;padding:3px 10px;visibility:hidden;}
+
+  #bar{position:absolute;left:0;right:0;top:1600px;height:120px;padding:0 46px;
+      display:flex;align-items:flex-start;justify-content:space-between;}
+  #bar .left{display:flex;flex-direction:column;gap:12px;}
+  #strike,#save{position:relative;height:26px;font-variant-numeric:tabular-nums;}
+  #strike{font-size:21px;color:var(--ink-muted);text-decoration:line-through;}
+  #save{font-size:18px;color:var(--ink-muted);height:24px;}
+  #strike em,#save em{position:absolute;left:0;top:0;font-style:normal;}
+  #roll{--dh:66px;display:flex;align-items:flex-start;height:var(--dh);}
+  #roll .g{height:var(--dh);line-height:var(--dh);font-size:56px;font-weight:600;color:var(--ink);
+      font-variant-numeric:tabular-nums;display:inline-block;}
+  .dc{display:inline-block;width:34px;height:var(--dh);overflow:hidden;}
+  .dc .ds{display:block;will-change:transform;}
+  .dc b{display:block;height:var(--dh);font-size:56px;font-weight:600;color:var(--ink);
+      line-height:var(--dh);font-variant-numeric:tabular-nums;}
+  .kit{font-size:18px;color:var(--gold);font-weight:500;height:26px;line-height:26px;}
+
+  #stepper{position:absolute;right:46px;top:1630px;display:flex;align-items:center;gap:20px;
+      background:#161619;border:1px solid #202023;
+      border-radius:999px;padding:10px 14px;}
+  #stepper .q{font-size:22px;font-weight:600;color:var(--ink);min-width:26px;text-align:center;}
+  #stepper .dim{font-size:26px;color:var(--ink-muted);line-height:1;}
+  #stepper .lit{font-size:26px;color:var(--ink-soft);line-height:1;}
+  #go{position:absolute;left:46px;right:46px;top:1740px;height:88px;border-radius:22px;
+      background-color:#f2d5a8;
+      background-image:linear-gradient(100deg,#f6dcb4,#e8c288 58%,#cf9d55);
+      color:#14100a;font-size:22px;font-weight:600;letter-spacing:.02em;
+      display:flex;align-items:center;justify-content:center;}
+
+  /* ---------- scene 4 · invoice ---------- */
+  #invoice{position:absolute;left:230px;top:560px;width:620px;border-radius:32px;
+      background:linear-gradient(160deg,#141418,#0e0e11);border:1px solid rgba(255,255,255,.09);
+      padding:38px 40px 40px;}
+  #invoice .kick{margin-bottom:12px;}
+  #invoice h2{font-size:48px;font-weight:500;letter-spacing:-.01em;}
+  #oid{font-size:16px;color:var(--ink-faint);margin-top:10px;font-variant-numeric:tabular-nums;}
+  #irows{margin-top:28px;display:flex;flex-direction:column;}
+  .irow{display:flex;align-items:center;justify-content:space-between;gap:16px;height:62px;}
+  .irow .il{display:flex;flex-direction:column;gap:4px;}
+  .irow .lbl{font-size:17px;color:var(--ink-muted);letter-spacing:.04em;}
+  .irow .nm{font-size:19px;color:var(--ink);}
+  .irow .ir{display:flex;align-items:center;gap:12px;flex:none;}
+  .irow .badge{background:var(--gold-lift);color:#0a0a0c;font-size:13px;font-weight:700;
+      padding:3px 9px;border-radius:999px;}
+  .irow .amt{font-size:19px;color:var(--ink);font-variant-numeric:tabular-nums;min-width:86px;
+      text-align:right;}
+  .ihr{height:1px;width:100%;background:var(--line);transform:scaleX(0);transform-origin:left;}
+  #isub,#idisc{display:flex;justify-content:space-between;align-items:center;height:44px;font-size:19px;}
+  #isub span:first-child,#idisc span:first-child{color:var(--ink-muted);}
+  #isub span:last-child{font-variant-numeric:tabular-nums;}
+  #idisc span:last-child{color:var(--gold);font-variant-numeric:tabular-nums;}
+  #itotal{position:relative;display:flex;justify-content:space-between;align-items:center;height:70px;}
+  #itotal span:first-child{font-size:21px;color:var(--ink-muted);}
+  #total-num{font-size:54px;font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums;}
+  #tglow{position:absolute;right:-40px;top:-10px;width:320px;height:150px;
+      background:radial-gradient(closest-side,rgba(226,184,119,.5),transparent 72%);opacity:0;}
+  #ichat{position:relative;margin-top:26px;height:84px;border-radius:22px;
+      background-color:#f2d5a8;
+      background-image:linear-gradient(100deg,#f6dcb4,#e8c288 58%,#cf9d55);color:#14100a;
+      font-size:21px;font-weight:600;display:flex;align-items:center;justify-content:center;}
+  #ihalo{position:absolute;left:-14px;right:-14px;top:-12px;bottom:-12px;border-radius:34px;
+      border:1px solid rgba(226,184,119,.55);opacity:0;}
+
+  /* ---------- scene 5 · order ready ---------- */
+  #sent-bg{position:absolute;inset:0;background:var(--bg);}
+  #ring{position:absolute;left:450px;top:640px;width:180px;height:180px;}
+  #ring svg{position:absolute;inset:0;overflow:visible;}
+  #ring circle,#ring path{fill:none;stroke:var(--gold);stroke-linecap:round;}
+  #rready{position:absolute;left:0;right:0;top:930px;text-align:center;font-size:96px;
+      font-weight:500;letter-spacing:-.02em;color:var(--ink);opacity:0;}
+  #lockup{position:absolute;left:0;right:0;top:1180px;display:flex;flex-direction:column;
+      align-items:center;gap:30px;opacity:0;}
+  #lockup .ln{width:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+  #lockup .wm{font-size:21px;font-weight:600;letter-spacing:.28em;color:var(--ink);}
+
+  /* ---------- cursor + flying chips ---------- */
+  #cursor{position:absolute;left:0;top:0;z-index:6;opacity:0;}
+  #cursor .ring{position:absolute;left:-22px;top:-22px;width:44px;height:44px;border-radius:50%;
+      border:2px solid rgba(244,241,234,.9);box-shadow:0 0 26px rgba(255,255,255,.28);}
+  #cursor .dot{position:absolute;left:-5px;top:-5px;width:10px;height:10px;border-radius:50%;
+      background:#f4f1ea;box-shadow:0 0 14px rgba(255,255,255,.5);}
+  #chips{z-index:5;}
+  .chip{position:absolute;width:88px;height:88px;border-radius:16px;background:rgba(18,18,22,.94);
+      border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;
+      opacity:0;}
+  .chip img{width:66px;height:66px;object-fit:contain;display:block;}
+</style>
+</head>
+<body>
+<div data-hf-id="hf-9ivf" id="root" data-composition-id="mirage" data-root="true" data-start="0" data-width="1080" data-height="1920" data-duration="21.2" data-fps="30">
+
+  <div data-hf-id="hf-2xc0" id="bg"></div>
+  <div data-hf-id="hf-3j0t" id="stage-glow"></div>
+  <div data-hf-id="hf-ls5o" id="stage-floor"></div>
+  <div data-hf-id="hf-f6d6" id="grain"></div>
+
+  <!-- ================= SCENE 1 · landing ================= -->
+  <section data-hf-id="hf-rnp1" id="s1" class="clip" data-start="0" data-duration="4.34">
+    <div data-hf-id="hf-uedv" id="s1-mark" class="wordmark serif">MIRAGE</div>
+    <div data-hf-id="hf-wnrm" class="lead">
+      <h1 data-hf-id="hf-6byu" id="h1" class="serif">High afford.</h1>
+      <p data-hf-id="hf-2k0d" id="gold-line">Pretty price, pretty quality.</p>
+      <p data-hf-id="hf-fzr6" id="from">From $280</p>
+      <h2 data-hf-id="hf-q0tm" id="s1-h2">Precision cinema cameras and honest accessories. Build your rig, then send it to our shop on Telegram.</h2>
+      <div data-hf-id="hf-ws6e" id="cta-tap">Tap to begin<div data-hf-id="hf-16y0" id="rim-sweep"></div></div>
+    </div>
+    <p data-hf-id="hf-cejz" id="hint">Tap anywhere to begin.</p>
+    <p data-hf-id="hf-gd0w" id="foot">Privacy &#160;·&#160; Terms</p>
+    <div data-hf-id="hf-n6zn" id="vline"></div>
+  </section>
+
+  <!-- ================= SCENES 2-4 · app chrome ================= -->
+  <div data-hf-id="hf-8slq" id="app-layer" class="clip" data-start="4.0" data-duration="13.47">
+   <!-- Scene 4 dims this whole layer to 0.16 so the invoice owns the frame.
+        It is set dressing at that point, not copy a viewer must read. -->
+   <div data-hf-id="hf-d5ae" id="app-inner" data-layout-ignore="">
+    <div data-hf-id="hf-430k" id="app-top">
+      <div data-hf-id="hf-yx9k" id="app-mark" class="wordmark serif">MIRAGE</div>
+      <div data-hf-id="hf-9uj1" id="bag">
+        <svg data-hf-id="hf-7pe1" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#f4f1ea" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path data-hf-id="hf-luv1" d="M5 8h14l-1.1 11.2A2 2 0 0 1 15.9 21H8.1a2 2 0 0 1-2-1.8L5 8Z" />
+          <path data-hf-id="hf-xsiw" d="M9 8V6a3 3 0 0 1 6 0v2" />
+        </svg>
+        <div data-hf-id="hf-wwdm" id="badge">
+          <span data-hf-id="hf-eziw" id="b1">1</span><span data-hf-id="hf-o4r6" id="b2" style="visibility:hidden">2</span><span data-hf-id="hf-99l2" id="b3" style="visibility:hidden">3</span>
+        </div>
+      </div>
+    </div>
+
+    <div data-hf-id="hf-o6ww" id="progress">
+      <div data-hf-id="hf-m7qm" class="pstep"><div data-hf-id="hf-gixj" class="pbar"><i data-hf-id="hf-53c8" id="pb1"></i></div><div data-hf-id="hf-hysl" class="plabel" id="pl1">Your camera</div></div>
+      <div data-hf-id="hf-9sqa" class="pstep"><div data-hf-id="hf-w6hj" class="pbar"><i data-hf-id="hf-dr83" id="pb2"></i></div><div data-hf-id="hf-ez0w" class="plabel" id="pl2">Accessories</div></div>
+      <div data-hf-id="hf-a71b" class="pstep"><div data-hf-id="hf-vs6i" class="pbar"><i data-hf-id="hf-9t42" id="pb3"></i></div><div data-hf-id="hf-4e9z" class="plabel" id="pl3">Review</div></div>
+    </div>
+
+    <div data-hf-id="hf-thow" id="back">
+      <svg data-hf-id="hf-ms8e" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d8d2c6" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path data-hf-id="hf-wr3n" d="M15 5l-7 7 7 7" /></svg>
+      <span data-hf-id="hf-wolq">Back</span>
+    </div>
+
+    <div data-hf-id="hf-j9tg" id="spec-pill">
+      <span data-hf-id="hf-w322" id="sp1">24MP Full-Frame Sensor</span>
+      <span data-hf-id="hf-htnb" id="sp2" style="visibility:hidden">33MP Stacked CMOS · 8K</span>
+    </div>
+
+    <div data-hf-id="hf-55rf" id="card">
+      <div data-hf-id="hf-3s5z" id="c-kick" class="eyebrow abs">STEP 1 OF 3 · YOUR CAMERA</div>
+      <div data-hf-id="hf-cfg1" id="c-kick-2" class="eyebrow abs" style="visibility:hidden;left:44px;top:44px;">STEP 2 OF 3 · YOUR KIT</div>
+      <h2 data-hf-id="hf-fhib" id="c-title-1" class="serif" style="visibility:hidden">Aurora X7</h2>
+      <h2 data-hf-id="hf-y3iw" id="c-title-2" class="serif">Make it yours.</h2>
+      <h2 data-hf-id="hf-zfab" id="c-title-3" class="serif" style="visibility:hidden">Woven Shoulder Strap</h2>
+      <h2 data-hf-id="hf-l1e4" id="c-title-4" class="serif" style="visibility:hidden">Locking Lens Cap</h2>
+      <h2 id="c-title-5" class="serif" style="visibility:hidden">Vela Pro</h2>
+      <p data-hf-id="hf-qjjp" class="sub" id="c-sub-1" style="visibility:hidden">Matte Black · 1 in your kit</p>
+      <p data-hf-id="hf-5j7q" class="sub" id="c-sub-2">Make it yours — pick your extras</p>
+      <p data-hf-id="hf-j8hb" class="sub" id="c-sub-3" style="visibility:hidden">1 item in your kit</p>
+      <p data-hf-id="hf-zjhc" class="sub" id="c-sub-4" style="visibility:hidden">2 items in your kit</p>
+      <p class="sub" id="c-sub-5" style="visibility:hidden">Gunmetal · 1 in your kit</p>
+    </div>
+
+    <div data-hf-id="hf-h2ao" id="stage-ring">
+      <div data-hf-id="hf-doj3" id="ring-glow"></div>
+      <img data-hf-id="hf-pawa" id="p-aurora" src="assets/img/stage-aurora-x7.png" alt="Aurora X7">
+      <img data-hf-id="hf-5kho" id="p-vela" src="assets/img/stage-vela-pro.png" alt="Vela Pro" style="visibility:hidden">
+    </div>
+
+    <div data-hf-id="hf-jqdc" id="rail-wrap" data-layout-allow-overlap="true" data-layout-allow-occlusion="true">
+      <div data-hf-id="hf-gvf1" id="rail">
+        <div data-hf-id="hf-xhjo" class="rcard" id="rc1"><img data-hf-id="hf-ufoh" src="assets/img/thumb-aurora-x7.png" alt="Aurora X7">
+          <div data-hf-id="hf-261e" class="scrim"></div><div data-hf-id="hf-isvu" class="idx">01</div><div data-hf-id="hf-7im7" class="on">×1</div>
+          <div data-hf-id="hf-puvz" class="meta"><div data-hf-id="hf-amh4" class="nm">Aurora X7</div><div data-hf-id="hf-rxf7" class="pr">$410</div></div>
+          <div data-hf-id="hf-gs9c" class="disc">−15%</div><div data-hf-id="hf-7fw0" class="sel" id="rs1"></div></div>
+        <div data-hf-id="hf-8d1b" class="rcard" id="rc2"><img data-hf-id="hf-k77t" src="assets/img/thumb-vela-pro.png" alt="Vela Pro">
+          <div data-hf-id="hf-9weu" class="scrim"></div><div data-hf-id="hf-j76v" class="idx">02</div><div data-hf-id="hf-fa4f" class="on">×1</div>
+          <div data-hf-id="hf-zjfj" class="meta"><div data-hf-id="hf-il62" class="nm">Vela Pro</div><div data-hf-id="hf-sp30" class="pr">$460</div></div>
+          <div data-hf-id="hf-2wo8" class="disc">−15%</div><div data-hf-id="hf-ibdn" class="sel" id="rs2"></div></div>
+        <div data-hf-id="hf-4exa" class="rcard" id="rc3"><img data-hf-id="hf-sfpz" src="assets/img/thumb-drift-mini.png" alt="Drift Mini">
+          <div data-hf-id="hf-aapv" class="scrim"></div><div data-hf-id="hf-jlhw" class="idx">03</div>
+          <div data-hf-id="hf-z54i" class="meta"><div data-hf-id="hf-ime1" class="nm">Drift Mini</div><div data-hf-id="hf-uiu8" class="pr">$280</div></div>
+          <div data-hf-id="hf-1pr5" class="disc">−15%</div><div data-hf-id="hf-ed9m" class="sel" id="rs3"></div></div>
+        <div data-hf-id="hf-d2t5" class="rcard" id="rc4"><img data-hf-id="hf-xa0l" src="assets/img/thumb-aurora-x7.png" alt="Aurora X7">
+          <div data-hf-id="hf-ap0w" class="scrim"></div><div data-hf-id="hf-jzsx" class="idx">04</div>
+          <div data-hf-id="hf-yqth" class="meta"><div data-hf-id="hf-betc" class="nm">Aurora X7</div><div data-hf-id="hf-dcnn" class="pr">$410</div></div>
+          <div data-hf-id="hf-2426" class="disc">−15%</div><div data-hf-id="hf-vljx" class="sel" id="rs4"></div></div>
+      </div>
+      <div data-hf-id="hf-gs5t" id="grid">
+        <div data-hf-id="hf-df5a" class="acard" id="ac1"><img data-hf-id="hf-7tq3" src="assets/img/thumb-leather-keychain.png" alt="Leather Keychain">
+          <div data-hf-id="hf-yeow"><div data-hf-id="hf-oxzo" class="nm">Leather Keychain</div><div data-hf-id="hf-cwsb" class="pr">$18</div></div></div>
+        <div data-hf-id="hf-9h19" class="acard" id="ac2"><img data-hf-id="hf-cton" src="assets/img/thumb-leather-backpack.png" alt="Leather Backpack">
+          <div data-hf-id="hf-y7yw"><div data-hf-id="hf-tduu" class="nm">Leather Backpack</div><div data-hf-id="hf-stj1" class="pr">$89</div></div></div>
+        <div data-hf-id="hf-8pdg" class="acard" id="ac3"><img data-hf-id="hf-44ek" src="assets/img/thumb-lens-cap.png" alt="Locking Lens Cap">
+          <div data-hf-id="hf-x11t"><div data-hf-id="hf-4r4s" class="nm">Locking Lens Cap</div><div data-hf-id="hf-famh" class="pr">$12</div></div>
+          <div data-hf-id="hf-nhq6" class="on" id="ac3-on">×1</div></div>
+        <div data-hf-id="hf-w6uz" class="acard" id="ac4"><img data-hf-id="hf-re2m" src="assets/img/thumb-shoulder-strap.png" alt="Woven Shoulder Strap">
+          <div data-hf-id="hf-xfcu"><div data-hf-id="hf-jqes" class="nm">Woven Shoulder Strap</div><div data-hf-id="hf-mrs3" class="pr">$29</div></div>
+          <div data-hf-id="hf-4fvr" class="on" id="ac4-on">×1</div></div>
+      </div>
+    </div>
+
+    <div data-hf-id="hf-32ta" id="bar" data-layout-allow-overlap="true" data-layout-allow-occlusion="true">
+      <div data-hf-id="hf-i0dv" class="left">
+        <div data-hf-id="hf-5g0v" id="strike"><em data-hf-id="hf-vv5l" id="strike-1">$410.00</em><em data-hf-id="hf-mukn" id="strike-2" style="visibility:hidden">$460.00</em></div>
+        <div data-hf-id="hf-q8qu" id="save"><em data-hf-id="hf-6qmb" id="save-1">You save $61.50</em><em data-hf-id="hf-r5u4" id="save-2" style="visibility:hidden">You save $46.00</em></div>
+        <div data-hf-id="hf-b8v1" id="roll" data-layout-ignore="true">
+          <span data-hf-id="hf-l43o" class="g">$</span>
+          <span data-hf-id="hf-8ha4" class="dc" id="d0"><span data-hf-id="hf-1q8p" class="ds"><b data-hf-id="hf-xujp"></b><b data-hf-id="hf-sqbz">0</b><b data-hf-id="hf-t4n0">1</b><b data-hf-id="hf-rxpx">2</b><b data-hf-id="hf-sc0y">3</b><b data-hf-id="hf-ubk3">4</b><b data-hf-id="hf-upv4">5</b><b data-hf-id="hf-tiy1">6</b><b data-hf-id="hf-tx92">7</b><b data-hf-id="hf-pjvr">8</b><b data-hf-id="hf-py6s">9</b></span></span>
+          <span data-hf-id="hf-98xx" class="dc" id="d1"><span data-hf-id="hf-yon2" class="ds"><b data-hf-id="hf-ey49"></b><b data-hf-id="hf-e7ov">0</b><b data-hf-id="hf-dmic">1</b><b data-hf-id="hf-mt2h">2</b><b data-hf-id="hf-nwee">3</b><b data-hf-id="hf-0683">4</b><b data-hf-id="hf-zl1k">5</b><b data-hf-id="hf-w1st">6</b><b data-hf-id="hf-nybe">7</b><b data-hf-id="hf-yemf">8</b><b data-hf-id="hf-o3n0">9</b></span></span>
+          <span data-hf-id="hf-fenq" class="dc" id="d2"><span data-hf-id="hf-335w" class="ds"><b data-hf-id="hf-g51c"></b><b data-hf-id="hf-dtdu">0</b><b data-hf-id="hf-cfl9">1</b><b data-hf-id="hf-nzzk">2</b><b data-hf-id="hf-oapf">3</b><b data-hf-id="hf-zrx2">4</b><b data-hf-id="hf-ye4h">5</b><b data-hf-id="hf-x8pw">6</b><b data-hf-id="hf-ocmf">7</b><b data-hf-id="hf-y0be">8</b><b data-hf-id="hf-mwpx">9</b></span></span>
+          <span data-hf-id="hf-nhxu" class="g">.</span>
+          <span data-hf-id="hf-jcrr" class="dc" id="d3"><span data-hf-id="hf-0szk" class="ds"><b data-hf-id="hf-fqqb"></b><b data-hf-id="hf-df2t">0</b><b data-hf-id="hf-ctwa">1</b><b data-hf-id="hf-nloj">2</b><b data-hf-id="hf-op0g">3</b><b data-hf-id="hf-zdm1">4</b><b data-hf-id="hf-ysfi">5</b><b data-hf-id="hf-wuev">6</b><b data-hf-id="hf-oqxg">7</b><b data-hf-id="hf-xm0d">8</b><b data-hf-id="hf-nb0y">9</b></span></span>
+          <span data-hf-id="hf-navs" class="dc" id="d4"><span data-hf-id="hf-jzjd" class="ds"><b data-hf-id="hf-dr76"></b><b data-hf-id="hf-g780">0</b><b data-hf-id="hf-etff">1</b><b data-hf-id="hf-lm5e">2</b><b data-hf-id="hf-lwv9">3</b><b data-hf-id="hf-yzb0">4</b><b data-hf-id="hf-xlif">5</b><b data-hf-id="hf-y1by">6</b><b data-hf-id="hf-p58h">7</b><b data-hf-id="hf-0e5k">8</b><b data-hf-id="hf-pak3">9</b></span></span>
+        </div>
+      </div>
+      <div data-hf-id="hf-w8fr">
+        <div data-hf-id="hf-24oa" class="kit" id="kit1" style="visibility:hidden">Kit $29</div>
+        <div data-hf-id="hf-i9y1" class="kit" id="kit2" style="visibility:hidden">Kit $41</div>
+      </div>
+    </div>
+
+    <div data-hf-id="hf-v038" id="stepper">
+      <span data-hf-id="hf-9hn1" class="dim">−</span><span data-hf-id="hf-84v9" class="q">1</span><span data-hf-id="hf-zf0d" class="lit">+</span>
+    </div>
+    <div data-hf-id="hf-7us6" id="go">Continue</div>
+   </div>
+  </div>
+
+  <!-- ================= SCENE 4 · invoice ================= -->
+  <div data-hf-id="hf-q8xl" id="invoice-layer" class="clip" data-start="13.11" data-duration="4.37">
+    <div data-hf-id="hf-nc02" id="invoice">
+      <div data-hf-id="hf-xyjr" class="kick eyebrow">STEP 3 OF 3 · REVIEW</div>
+      <h2 data-hf-id="hf-lq2x" class="serif">Invoice</h2>
+      <p data-hf-id="hf-7n1y" id="oid">#CC-20260928-1426-37</p>
+      <div data-hf-id="hf-7qil" id="irows">
+        <div data-hf-id="hf-8shv" class="irow"><div data-hf-id="hf-0vdb" class="il"><span data-hf-id="hf-qaym" class="lbl">Camera</span>
+          <span data-hf-id="hf-mmic" class="nm">Aurora X7 · Matte Black</span></div>
+          <div data-hf-id="hf-e5jl" class="ir"><span data-hf-id="hf-g8k5" class="badge">−15%</span><span data-hf-id="hf-cm4q" class="amt">$410.00</span></div></div>
+        <div data-hf-id="hf-7mwz" class="irow"><div data-hf-id="hf-q9kf" class="il"><span data-hf-id="hf-fc95" class="lbl">Accessory</span>
+          <span data-hf-id="hf-xhml" class="nm">Woven Shoulder Strap</span></div>
+          <div data-hf-id="hf-5vk5" class="ir"><span data-hf-id="hf-7b3g" class="amt">$29.00</span></div></div>
+        <div data-hf-id="hf-78ly" class="irow"><div data-hf-id="hf-pv9e" class="il"><span data-hf-id="hf-fd8d" class="lbl">Accessory</span>
+          <span data-hf-id="hf-41yt" class="nm">Locking Lens Cap</span></div>
+          <div data-hf-id="hf-72h8" class="ir"><span data-hf-id="hf-kp5u" class="amt">$12.00</span></div></div>
+      </div>
+      <div data-hf-id="hf-q2vw" class="ihr" id="hr1"></div>
+      <div data-hf-id="hf-75io" id="isub"><span data-hf-id="hf-2ss1">Subtotal</span><span data-hf-id="hf-itqb">$451.00</span></div>
+      <div data-hf-id="hf-xvy5" id="idisc"><span data-hf-id="hf-snaa">Discount</span><span data-hf-id="hf-dso5">−$61.50</span></div>
+      <div data-hf-id="hf-yqrr" class="ihr" id="hr2"></div>
+      <div data-hf-id="hf-zlus" id="itotal"><span data-hf-id="hf-7qep">Total</span><span data-hf-id="hf-drm4" id="total-num">$389.50</span><div data-hf-id="hf-cdbk" id="tglow"></div></div>
+      <div data-hf-id="hf-0y69" id="ichat">Send to shop chat<div data-hf-id="hf-xws4" id="ihalo"></div></div>
+    </div>
+  </div>
+
+  <!-- ================= SCENE 5 · order ready ================= -->
+  <div data-hf-id="hf-hx2s" id="sent-layer" class="clip" data-start="17.47" data-duration="3.73">
+    <div data-hf-id="hf-k6mt" id="sent-bg"></div>
+    <div data-hf-id="hf-m1rf" id="ring">
+      <svg data-hf-id="hf-5qgp" viewBox="0 0 180 180">
+        <circle data-hf-id="hf-rsd2" cx="90" cy="90" r="76" stroke-width="2.5" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" id="r-ring" />
+        <path data-hf-id="hf-ecqg" d="M63 92 L81 110 L118 70" stroke-width="6" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" id="r-tick" />
+      </svg>
+    </div>
+    <p data-hf-id="hf-x9m4" id="rready" class="serif">Order ready.</p>
+    <div data-hf-id="hf-mlav" id="lockup"><div data-hf-id="hf-6nlz" class="ln" id="ln1"></div><div data-hf-id="hf-8684" class="wm serif">MIRAGE</div><div data-hf-id="hf-xzq4" class="ln" id="ln2"></div></div>
+  </div>
+
+  <!-- ================= overlays ================= -->
+  <div data-hf-id="hf-f8d2" id="chips">
+    <div data-hf-id="hf-mnnz" class="chip" id="chip-strap"><img data-hf-id="hf-7pb6" src="assets/img/thumb-shoulder-strap.png" alt="Woven Shoulder Strap"></div>
+    <div data-hf-id="hf-vfgl" class="chip" id="chip-cap"><img data-hf-id="hf-a2jo" src="assets/img/thumb-lens-cap.png" alt="Locking Lens Cap"></div>
+  </div>
+  <div data-hf-id="hf-8gdj" id="cursor"><div data-hf-id="hf-0qcu" class="ring"></div><div data-hf-id="hf-lu65" class="dot"></div></div>
+  <div data-hf-id="hf-h7i3" id="vignette"></div>
+  <div data-hf-id="hf-nj2e" id="outro"></div>
+
+  <!-- ================= audio ================= -->
+  <audio data-hf-id="hf-4evx" id="bed" data-layout-ignore="true" data-start="0" data-duration="21.2" data-track-index="0" data-automation="{&quot;version&quot;:1,&quot;lanes&quot;:[{&quot;target&quot;:&quot;volume&quot;,&quot;points&quot;:[{&quot;t&quot;:0,&quot;v&quot;:0},{&quot;t&quot;:1.5,&quot;v&quot;:0.85},{&quot;t&quot;:20.2,&quot;v&quot;:0.85},{&quot;t&quot;:21.2,&quot;v&quot;:0}]}]}" src="assets/music/happy-beats-business-moves-vol-12-by-ende-dot-app.mp3"></audio>
+
+  <audio data-hf-id="hf-qgpb" id="sfx-open-1" data-layout-ignore="true" data-start="0.12" data-duration="0.2" data-track-index="1" data-volume="0.45" src="assets/sfx/impact/impactSoft_medium_001.ogg"></audio>
+  <audio data-hf-id="hf-5khn" id="sfx-open-2" data-layout-ignore="true" data-start="4.02" data-duration="0.2" data-track-index="1" data-volume="0.45" src="assets/sfx/impact/impactSoft_medium_001.ogg"></audio>
+  <audio data-hf-id="hf-12p6" id="sfx-tap-1" data-layout-ignore="true" data-start="7.09" data-duration="0.14" data-track-index="1" data-volume="0.5" src="assets/sfx/interface/drop_001.ogg"></audio>
+  <audio data-hf-id="hf-p1xq" id="sfx-tap-2" data-layout-ignore="true" data-start="7.64" data-duration="0.14" data-track-index="1" data-volume="0.5" src="assets/sfx/interface/drop_001.ogg"></audio>
+  <audio data-hf-id="hf-tsey" id="sfx-tap-3" data-layout-ignore="true" data-start="8.19" data-duration="0.14" data-track-index="1" data-volume="0.5" src="assets/sfx/interface/drop_001.ogg"></audio>
+  <audio data-hf-id="hf-y5vh" id="sfx-open-3" data-layout-ignore="true" data-start="8.74" data-duration="0.2" data-track-index="1" data-volume="0.45" src="assets/sfx/impact/impactSoft_medium_001.ogg"></audio>
+  <audio data-hf-id="hf-o9sr" id="sfx-tap-4" data-layout-ignore="true" data-start="9.83" data-duration="0.14" data-track-index="1" data-volume="0.5" src="assets/sfx/interface/drop_001.ogg"></audio>
+  <audio data-hf-id="hf-58o5" id="sfx-drop-1" data-layout-ignore="true" data-start="10.72" data-duration="0.14" data-track-index="1" data-volume="0.55" src="assets/sfx/interface/drop_001.ogg"></audio>
+  <audio data-hf-id="hf-msee" id="sfx-tap-5" data-layout-ignore="true" data-start="11.46" data-duration="0.14" data-track-index="1" data-volume="0.5" src="assets/sfx/interface/drop_001.ogg"></audio>
+  <audio data-hf-id="hf-2pb8" id="sfx-drop-2" data-layout-ignore="true" data-start="12.32" data-duration="0.14" data-track-index="1" data-volume="0.55" src="assets/sfx/interface/drop_001.ogg"></audio>
+  <audio data-hf-id="hf-z3w4" id="sfx-tap-6" data-layout-ignore="true" data-start="12.55" data-duration="0.14" data-track-index="1" data-volume="0.5" src="assets/sfx/interface/drop_001.ogg"></audio>
+  <audio data-hf-id="hf-pca3" id="sfx-open-4" data-layout-ignore="true" data-start="13.11" data-duration="0.2" data-track-index="1" data-volume="0.45" src="assets/sfx/impact/impactSoft_medium_001.ogg"></audio>
+  <audio data-hf-id="hf-3476" id="sfx-tap-7" data-layout-ignore="true" data-start="17.2" data-duration="0.14" data-track-index="1" data-volume="0.5" src="assets/sfx/interface/drop_001.ogg"></audio>
+  <audio data-hf-id="hf-9i8b" id="sfx-bell" data-layout-ignore="true" data-start="18.02" data-duration="1.4" data-track-index="1" data-volume="0.5" src="assets/sfx/impact/impactBell_heavy_000.ogg"></audio>
+</div>
+
+<script src="assets/vendor/gsap.min.js"></script>
+<script src="assets/music/audio-data.js"></script>
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+
+  var E_SNAP = 'power3.out', E_SOFT = 'power2.inOut', E_POP = 'back.out(2.0)', E_POP2 = 'back.out(1.6)';
+
+  var tl = gsap.timeline({ paused: true });
+
+  /* ---------- baseline discipline ----------
+     GSAP applies a fromTo's from-vars at AUTHOR time (immediateRender). The first
+     fromTo on an element therefore owns its resting state; every later one must not
+     stomp it, or a cold seek before the first tween inherits the wrong baseline. */
+  var touched = Object.create(null);
+  function fb(sel, v) {
+    if (touched[sel]) { v = Object.assign({}, v); v.immediateRender = false; }
+    touched[sel] = 1;
+    return v;
+  }
+  function X(sel, from, to, pos) { tl.fromTo(sel, from, fb(sel, to), pos); }
+
+  /* ---------- helpers ---------- */
+  /* One text slot, one line on screen: the outgoing line clears completely
+     before the incoming one starts, so two names are never legible together. */
+  function swap(offSel, onSel, t, dur) {
+    var out = dur * 0.45;
+    X(offSel, { autoAlpha: 1 }, { autoAlpha: 0, duration: out, ease: E_SNAP }, t);
+    X(onSel, { autoAlpha: 0 }, { autoAlpha: 1, duration: dur - out, ease: E_SNAP }, t + out);
+  }
+  function pop(sel, t, s) {
+    s = s || 0.86;
+    X(sel, { scale: 1 }, { scale: s, duration: 0.13, ease: E_POP }, t);
+    tl.to(sel, { scale: 1, duration: 0.34, ease: E_POP }, t + 0.14);
+  }
+  function move(x, y, t, dur) { tl.to('#cursor', { x: x, y: y, duration: dur, ease: E_SOFT }, t); }
+  function click(x, y, t, dur) { move(x, y, t - 0.4, dur || 0.28); pop('#cursor', t); }
+  function bump(sel, t, s, hold) {
+    X(sel, { scale: 1 }, { scale: s, duration: 0.16, ease: E_POP2 }, t);
+    tl.to(sel, { scale: 1, duration: hold || 0.34, ease: E_POP2 }, t + 0.17);
+  }
+
+  /* ---------- digit odometer (explicit from-state => seek-safe) ---------- */
+  var DC = [$('d0'), $('d1'), $('d2'), $('d3'), $('d4')].map(function (el) { return el.firstElementChild; });
+  /* One source of truth for the digit geometry: the strip's row height. Reading it
+     back from CSS means the step can never drift from the rendered row again. */
+  var ROW = parseFloat(getComputedStyle($('roll')).getPropertyValue('--dh')) || 66;
+  var rest = function (d) { return -(d + 1) * ROW; };   /* row 0 is the blank spacer */
+  var CUR = [3, 4, 8, 5, 0].map(rest);
+  DC.forEach(function (el, i) { el.style.transform = 'translateY(' + CUR[i] + 'px)'; });
+  function roll(digits, t, dur) {
+    for (var i = 0; i < 5; i++) {
+      var to = rest(digits[i]);
+      X(DC[i], { y: CUR[i] }, { y: to, duration: dur, ease: E_SNAP }, t);
+      CUR[i] = to;
+    }
+  }
+
+  /* ================= SCENE 1 · landing ================= */
+  X('#s1-mark', { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.6, ease: E_SNAP }, 0.05);
+  X('#h1', { autoAlpha: 0, y: 36 }, { autoAlpha: 1, y: 0, duration: 0.8, ease: E_SNAP }, 0.22);
+  X('#gold-line', { autoAlpha: 0, y: 18 }, { autoAlpha: 1, y: 0, duration: 0.7, ease: E_SNAP }, 0.62);
+  X('#from', { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: 0.6, ease: E_SNAP }, 0.96);
+  X('#s1-h2', { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.8, ease: E_SNAP }, 1.24);
+  X('#cta-tap', { autoAlpha: 0, scale: 0.94 }, { autoAlpha: 1, scale: 1, duration: 0.6, ease: E_POP }, 1.52);
+  X('#hint', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.6, ease: E_SNAP }, 1.80);
+  X('#foot', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.6, ease: E_SNAP }, 1.95);
+  /* ambient: hairline travels, rim light sweeps the CTA */
+  X('#rim-sweep', { scaleX: 0, autoAlpha: 0.9 }, { scaleX: 1, autoAlpha: 0.9, duration: 0.5, ease: E_SOFT }, 1.25);
+  X('#rim-sweep', { autoAlpha: 0.9 }, { autoAlpha: 0, duration: 0.45, ease: E_SNAP }, 1.75);
+  X('#vline', { autoAlpha: 0.8, scaleY: 0.1 }, { scaleY: 1, autoAlpha: 0.8, duration: 1.5, ease: E_SOFT }, 0.85);
+  X('#vline', { autoAlpha: 0.8 }, { autoAlpha: 0, duration: 0.5, ease: E_SNAP }, 2.35);
+  /* landing lifts away as the configurator arrives */
+  tl.to('#s1 .lead, #s1-mark, #hint, #foot',
+    { autoAlpha: 0, y: -28, duration: 0.32, ease: E_SNAP, stagger: 0.015 }, 4.0);
+
+  /* ================= SCENE 2 · choose ================= */
+  X('#app-inner', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.34, ease: E_SNAP }, 4.0);
+  X('#app-mark', { autoAlpha: 0, y: -18 }, { autoAlpha: 1, y: 0, duration: 0.6, ease: E_SNAP }, 4.00);
+  X('#bag', { autoAlpha: 0, y: -18 }, { autoAlpha: 1, y: 0, duration: 0.6, ease: E_SNAP }, 4.10);
+  X('#badge', { scale: 0.4 }, { scale: 1, duration: 0.5, ease: E_POP2 }, 4.20);
+  X('#pb1', { scaleX: 0 }, { scaleX: 1, duration: 0.6, ease: E_SOFT }, 4.06);
+  X('#back', { autoAlpha: 0, x: -20 }, { autoAlpha: 1, x: 0, duration: 0.55, ease: E_SNAP }, 4.24);
+  X('#spec-pill', { autoAlpha: 0, x: 20 }, { autoAlpha: 1, x: 0, duration: 0.55, ease: E_SNAP }, 4.30);
+  X('#card', { autoAlpha: 0, y: 28, scale: 0.985 }, { autoAlpha: 1, y: 0, scale: 1, duration: 0.7, ease: E_SNAP }, 4.16);
+  X('#c-title-2', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.5, ease: E_SNAP }, 4.30);
+  X('#stage-ring', { autoAlpha: 0, y: 42, scale: 0.94 }, { autoAlpha: 1, y: 0, scale: 1, duration: 0.8, ease: E_SNAP }, 4.20);
+  X('#strike, #save, #roll', { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: 0.55, ease: E_SNAP }, 4.52);
+  X('#stepper', { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.5, ease: E_SNAP }, 4.66);
+  X('#go', { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.55, ease: E_SNAP }, 4.72);
+  X('.rcard', { autoAlpha: 0, y: 26 }, { autoAlpha: 1, y: 0, duration: 0.5, ease: E_SNAP, stagger: 0.09 }, 4.62);
+  /* hero idle: a slow finite float so the frame is never dead */
+  X('#stage-ring', { y: 0 }, { y: -10, duration: 1.9, ease: 'sine.inOut', yoyo: true, repeat: 3 }, 5.0);
+  X('#ring-glow', { autoAlpha: 0.75 }, { autoAlpha: 1, duration: 1.9, ease: 'sine.inOut', yoyo: true, repeat: 3 }, 5.0);
+  /* selection ring appears on the chosen card */
+  tl.set('#rs1', { autoAlpha: 1 }, 4.40);
+  X('#rc1 .on', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.3, ease: E_SNAP }, 4.40);
+
+  /* cursor arrives near the hint, then travels to the rail */
+  tl.set('#cursor', { x: 612, y: 1660 }, 4.40);
+  X('#cursor', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.3, ease: E_SNAP }, 4.40);
+
+  /* model rail steps in on the beat */
+  X('#rs2', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.26, ease: E_SNAP }, 5.34);
+  X('#rc2', { y: 26 }, { y: 0, duration: 0.5, ease: E_SNAP }, 5.34);
+  X('#rs3', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.26, ease: E_SNAP }, 6.00);
+  X('#rc3', { y: 26 }, { y: 0, duration: 0.5, ease: E_SNAP }, 6.00);
+  X('#rs4', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.26, ease: E_SNAP }, 6.56);
+  X('#rc4', { y: 26 }, { y: 0, duration: 0.5, ease: E_SNAP }, 6.56);
+
+  /* tap Vela Pro — every price/spec/live value updates, exactly as the app does */
+  click(426, 1418, 7.09, 0.55);
+  swap('#rs1', '#rs2', 7.09, 0.2);
+  swap('#p-aurora', '#p-vela', 7.09, 0.22);
+  swap('#c-title-2', '#c-title-5', 7.09, 0.18);
+  swap('#c-sub-2', '#c-sub-5', 7.09, 0.18);
+  swap('#sp1', '#sp2', 7.09, 0.16);
+  swap('#strike-1', '#strike-2', 7.09, 0.16);
+  swap('#save-1', '#save-2', 7.09, 0.16);
+  X('#rc1 .on', { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.18, ease: 'none' }, 7.09);
+  X('#rc2 .on', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.18, ease: E_SNAP }, 7.20);
+  roll([4, 1, 4, 0, 0], 7.09, 0.4);
+  bump('#badge', 7.16, 1.22);
+
+  /* tap Aurora X7 again — back to the first rig */
+  click(198, 1418, 7.64, 0.22);
+  swap('#rs2', '#rs1', 7.64, 0.2);
+  swap('#p-vela', '#p-aurora', 7.64, 0.22);
+  swap('#c-title-5', '#c-title-1', 7.64, 0.18);
+  swap('#c-sub-5', '#c-sub-1', 7.64, 0.18);
+  swap('#sp2', '#sp1', 7.64, 0.16);
+  swap('#strike-2', '#strike-1', 7.64, 0.16);
+  swap('#save-2', '#save-1', 7.64, 0.16);
+  X('#rc2 .on', { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.18, ease: 'none' }, 7.64);
+  X('#rc1 .on', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.18, ease: E_SNAP }, 7.75);
+  roll([3, 4, 8, 5, 0], 7.64, 0.4);
+  bump('#badge', 7.71, 1.22);
+
+  click(540, 1784, 8.19, 0.17);
+  pop('#go', 8.19, 0.975);
+  tl.to('#cursor', { autoAlpha: 0, duration: 0.22, ease: E_SNAP }, 8.52);
+
+  /* ================= SCENE 3 · accessories ================= */
+  var U = 8.74;
+  swap('#c-kick', '#c-kick-2', U, 0.16);
+  swap('#c-title-1', '#c-title-3', U, 0.16);
+  swap('#c-sub-1', '#c-sub-2', U, 0.16);
+  X('#rail', { autoAlpha: 1, y: 0 }, { autoAlpha: 0, y: 24, duration: 0.28, ease: E_SNAP }, U);
+  X('#grid', { autoAlpha: 0, y: 28 }, { autoAlpha: 1, y: 0, duration: 0.5, ease: E_SNAP }, U);
+  X('#pl2', { color: '#8e877c' }, { color: '#f4f1ea', duration: 0.3, ease: 'none' }, U + 0.1);
+  X('#pb2', { scaleX: 0 }, { scaleX: 1, duration: 0.55, ease: E_SOFT }, U);
+  X('#stepper', { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.2, ease: 'none' }, U);
+  X('#back', { autoAlpha: 1, x: 0 }, { autoAlpha: 0, x: -20, duration: 0.24, ease: E_SNAP }, U);
+  X('#strike, #save', { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.2, ease: 'none' }, U);
+  X('#stage-ring', { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.24, ease: E_SNAP }, U);
+
+  /* accessory cards step in */
+  [['#ac1', 8.74], ['#ac2', 9.29], ['#ac3', 9.83], ['#ac4', 10.37]].forEach(function (p) {
+    X(p[0], { autoAlpha: 0, y: 22 }, { autoAlpha: 1, y: 0, duration: 0.42, ease: E_SNAP }, p[1]);
+  });
+
+  /* tap Woven Shoulder Strap -> chip flies into the bag */
+  tl.set('#cursor', { x: 687, y: 1500 }, 9.55);
+  X('#cursor', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.24, ease: E_SNAP }, 9.55);
+  pop('#ac4', 9.83, 0.97);
+  X('#chip-strap', { x: 643, y: 1456, autoAlpha: 0, scale: 0.8, rotation: 0 },
+    { autoAlpha: 1, scale: 1, duration: 0.18, ease: E_POP }, 9.95);
+  tl.to('#chip-strap', { x: 978, y: 114, scale: 0.42, rotation: 16, duration: 0.72, ease: E_SNAP }, 10.13);
+  tl.to('#chip-strap', { autoAlpha: 0, duration: 0.16, ease: E_SNAP }, 10.65);
+  bump('#bag', 10.72, 1.16, 0.42);
+  swap('#b1', '#b2', 10.74, 0.14);
+  bump('#badge', 10.74, 1.28, 0.36);
+  swap('#c-sub-2', '#c-sub-3', 10.74, 0.18);
+  X('#c-title-3', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.18, ease: E_SNAP }, 10.74);
+  X('#ac4-on', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.18, ease: E_SNAP }, 10.80);
+  X('#kit1', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.24, ease: E_SNAP }, 10.80);
+  roll([3, 7, 7, 5, 0], 10.80, 0.32);
+
+  /* tap Locking Lens Cap */
+  click(393, 1375, 11.46, 0.26);
+  pop('#ac3', 11.46, 0.97);
+  X('#chip-cap', { x: 349, y: 1331, autoAlpha: 0, scale: 0.8, rotation: 0 },
+    { autoAlpha: 1, scale: 1, duration: 0.18, ease: E_POP }, 11.58);
+  tl.to('#chip-cap', { x: 978, y: 114, scale: 0.42, rotation: -14, duration: 0.66, ease: E_SNAP }, 11.76);
+  tl.to('#chip-cap', { autoAlpha: 0, duration: 0.16, ease: E_SNAP }, 12.26);
+  bump('#bag', 12.32, 1.16, 0.42);
+  swap('#b2', '#b3', 12.34, 0.14);
+  bump('#badge', 12.34, 1.28, 0.36);
+  swap('#c-title-3', '#c-title-4', 12.34, 0.18);
+  swap('#c-sub-3', '#c-sub-4', 12.34, 0.18);
+  X('#ac3-on', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.18, ease: E_SNAP }, 12.40);
+  swap('#kit1', '#kit2', 12.40, 0.18);
+  roll([3, 8, 9, 5, 0], 12.40, 0.32);
+
+  click(540, 1784, 12.55, 0.15);
+  pop('#go', 12.55, 0.975);
+  tl.to('#cursor', { autoAlpha: 0, duration: 0.22, ease: E_SNAP }, 12.88);
+
+  /* ================= SCENE 4 · invoice ================= */
+  var V = 13.11;
+  tl.to('#app-inner', { autoAlpha: 0.16, duration: 0.42, ease: E_SNAP }, V);
+  X('#invoice', { autoAlpha: 0, y: 46, scale: 0.965 },
+    { autoAlpha: 1, y: 0, scale: 1, duration: 0.62, ease: E_SNAP }, V);
+  X('#invoice h2', { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.5, ease: E_SNAP }, V + 0.14);
+  X('#oid', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.45, ease: E_SNAP }, V + 0.20);
+  X('#ichat', { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.5, ease: E_SNAP }, 13.90);
+
+  /* rows land in sequence and then hold */
+  [['#irows .irow:nth-child(1)', 13.64], ['#irows .irow:nth-child(2)', 14.20],
+   ['#irows .irow:nth-child(3)', 14.73]].forEach(function (p) {
+    X(p[0], { autoAlpha: 0, x: -18 }, { autoAlpha: 1, x: 0, duration: 0.46, ease: E_SNAP }, p[1]);
+  });
+  X('#hr1', { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: E_SOFT }, 15.29);
+  X('#isub', { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.44, ease: E_SNAP }, 15.84);
+  X('#idisc', { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.44, ease: E_SNAP }, 16.38);
+  X('#hr2', { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: E_SOFT }, 16.70);
+  X('#total-num', { autoAlpha: 0, y: 18, scale: 0.94 },
+    { autoAlpha: 1, y: 0, scale: 1, duration: 0.55, ease: E_POP }, 16.93);
+
+  /* the CTA breathes three times while the invoice settles */
+  [14.40, 15.60, 16.80].forEach(function (t) {
+    X('#ihalo', { autoAlpha: 0, scale: 0.98 },
+      { autoAlpha: 0.8, scale: 1.014, duration: 0.6, ease: E_SOFT, transformOrigin: '50% 50%' }, t);
+    tl.to('#ihalo', { autoAlpha: 0, scale: 1.032, duration: 0.6, ease: E_SOFT }, t + 0.6);
+  });
+
+  /* cursor returns and presses send */
+  tl.set('#cursor', { x: 540, y: 1430 }, V + 0.1);
+  X('#cursor', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.26, ease: E_SNAP }, 13.30);
+  click(540, 1215, 17.20, 0.3);
+  pop('#ichat', 17.20, 0.975);
+  /* the pointer leaves with the press, so it never sits on the closing lockup */
+  tl.to('#cursor', { autoAlpha: 0, duration: 0.26, ease: E_SNAP }, 17.52);
+
+  /* ================= SCENE 5 · order ready ================= */
+  var W = 17.47;
+  X('#rready', { autoAlpha: 0, y: 22 }, { autoAlpha: 1, y: 0, duration: 0.62, ease: E_SNAP }, 18.56);
+  X('#ring', { autoAlpha: 0, scale: 0.42 }, { autoAlpha: 1, scale: 1, duration: 0.6, ease: E_POP }, 18.02);
+  X('#r-ring', { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.52, ease: E_SOFT }, 18.10);
+  X('#r-tick', { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.3, ease: E_SOFT }, 18.42);
+  X('#lockup', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.4, ease: E_SNAP }, 19.66);
+  X('#ln1', { width: 0 }, { width: 250, duration: 0.42, ease: E_SOFT }, 19.66);
+  X('#ln2', { width: 0 }, { width: 250, duration: 0.42, ease: E_SOFT }, 19.84);
+  X('#lockup .wm', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.4, ease: E_SNAP }, 19.84);
+  /* fade to black */
+  tl.to('#outro', { autoAlpha: 1, duration: 0.34, ease: E_SNAP }, 20.85);
+
+  /* ---------- audio-reactive stage light, one seekable call per frame ---------- */
+  var AUD = window.MIRAGE_AUDIO.frames, glow = $('stage-glow'), tglow = $('tglow');
+  for (var i = 0; i < AUD.length; i++) {
+    (function (idx) {
+      var f = AUD[idx];
+      var bass = (f[0] + f[1] + f[2]) / 3, amp = 0;
+      for (var b = 3; b < f.length; b++) { if (f[b] > amp) amp = f[b]; }
+      var t = idx / 30, show = (t >= 13.11 && t < 17.5) ? 1 : 0;
+      tl.call(function () {
+        glow.style.transform = 'translate(0,' + (-10 - bass * 24).toFixed(2) + 'px) scale(' + (1 + bass * 0.07).toFixed(4) + ')';
+        glow.style.opacity = (0.78 + amp * 0.5).toFixed(3);
+        tglow.style.opacity = (show * (0.28 + amp * 1.05)).toFixed(3);
+      }, null, t);
+    })(i);
+  }
+
+  window.__timelines = window.__timelines || {};
+  window.__timelines['mirage'] = tl;
+})();
+</script>
+</body>
+</html>

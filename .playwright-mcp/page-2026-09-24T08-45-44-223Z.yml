@@ -1,0 +1,86 @@
+- generic [ref=f3e3]:
+  - banner:
+    - generic: Mirage.
+    - button "Back" [ref=f3e255]
+  - navigation "Progress":
+    - generic [ref=f3e4]:
+      - generic [ref=f3e6]: Stage
+      - generic [ref=f3e9]: Camera
+      - generic [ref=f3e12]: Kit
+      - generic [ref=f3e15]: Review
+      - generic [ref=f3e18]: Sent
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - paragraph: The body
+          - heading "Aurora X7" [level=2]
+          - paragraph: Matte Black
+        - button "Back" [ref=f3e213]
+      - generic:
+        - paragraph: 24MP Full-Frame Sensor
+    - generic:
+      - generic:
+        - generic [ref=f3e218]:
+          - generic [ref=f3e219]: Your price
+          - generic [ref=f3e220]:
+            - generic [ref=f3e260]: −15%
+            - generic [ref=f3e221]: $357.29
+          - generic [ref=f3e261]:
+            - generic [ref=f3e262]: $439.00
+            - generic [ref=f3e263]: You save $61.50
+        - tablist "Camera models" [ref=f3e264]:
+          - tab "Aurora X7 Matte Black" [selected] [ref=f3e265]:
+            - generic [ref=f3e267]: −15%
+            - generic [ref=f3e269]: "01"
+            - generic [ref=f3e270]:
+              - generic [ref=f3e271]: Aurora X7
+              - generic [ref=f3e272]: $410.00
+          - tab "Vela Pro Gunmetal" [ref=f3e273]:
+            - generic [ref=f3e274]: −10%
+            - generic [ref=f3e276]: "02"
+            - generic [ref=f3e277]:
+              - generic [ref=f3e278]: Vela Pro
+              - generic [ref=f3e279]: $460.00
+          - tab "Drift Mini Charcoal" [ref=f3e280]:
+            - generic [ref=f3e281]: −15%
+            - generic [ref=f3e283]: "03"
+            - generic [ref=f3e284]:
+              - generic [ref=f3e285]: Drift Mini
+              - generic [ref=f3e286]: $280.00
+          - tab "Nova Lite Sand" [ref=f3e287]:
+            - generic [ref=f3e288]: 2D
+            - generic [ref=f3e290]: "04"
+            - generic [ref=f3e291]:
+              - generic [ref=f3e292]: Nova Lite
+              - generic [ref=f3e293]: $199.00
+        - button "Continue" [active] [ref=f3e252]
+  - generic [ref=f3e296]:
+    - generic [ref=f3e297]:
+      - generic [ref=f3e298]:
+        - paragraph [ref=f3e299]: The order
+        - heading "Invoice" [level=2] [ref=f3e300]
+      - generic [ref=f3e301]: "#CC-20260924-1545-94"
+    - generic [ref=f3e302]:
+      - generic [ref=f3e303]:
+        - generic [ref=f3e304]:
+          - term [ref=f3e305]: Camera
+          - definition [ref=f3e306]: Aurora X7 · Matte Black
+        - generic [ref=f3e307]:
+          - generic [ref=f3e308]: −15%
+          - generic [ref=f3e309]: $410.00
+      - generic [ref=f3e310]:
+        - generic [ref=f3e311]:
+          - term [ref=f3e312]: Accessory
+          - definition [ref=f3e313]: Woven Shoulder Strap
+        - generic [ref=f3e314]: $29.00
+      - generic [ref=f3e316]:
+        - term [ref=f3e317]: Subtotal
+        - definition [ref=f3e318]: $439.00
+      - generic [ref=f3e319]:
+        - term [ref=f3e320]: Discount
+        - definition [ref=f3e321]: −$61.50
+      - generic [ref=f3e323]:
+        - generic [ref=f3e324]: Total
+        - generic [ref=f3e325]: $377.50
+    - button "Send to shop chat" [ref=f3e328]

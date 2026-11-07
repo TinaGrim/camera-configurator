@@ -1,0 +1,54 @@
+[
+  {
+    "id": "aurora-x7",
+    "name": "Aurora X7",
+    "color": "Matte Black",
+    "price": 410,
+    "discountPercent": 15,
+    "modelUrl": "/models/aurora-x7.glb",
+    "thumbnail": "/thumbs/aurora-x7.png",
+    "spec": "24MP Full-Frame Sensor",
+    "viewOffsetY": -0.28,
+    "attachPoints": { "strapLug": [0, 0, 0], "lensFront": [0, 0, 0] },
+    "viewScale": 1
+  },
+  {
+    "id": "vela-pro",
+    "name": "Vela Pro",
+    "color": "Gunmetal",
+    "price": 460,
+    "discountPercent": 10,
+    "modelUrl": "/models/vela-pro.glb",
+    "thumbnail": "/thumbs/vela-pro.png",
+    "spec": "33MP Stacked CMOS · 8K",
+    "viewOffsetY": -0.76,
+    "attachPoints": { "strapLug": [0, 0, 0], "lensFront": [0, 0, 0] },
+    "viewScale": 0.45
+  },
+  {
+    "id": "drift-mini",
+    "name": "Drift Mini",
+    "color": "Charcoal",
+    "price": 280,
+    "discountPercent": 15,
+    "modelUrl": "/models/drift-mini.glb",
+    "thumbnail": "/thumbs/drift-mini.png",
+    "spec": "Compact APS-C Traveler",
+    "viewOffsetY": -0.76,
+    "attachPoints": { "strapLug": [0, 0, 0], "lensFront": [0, 0, 0] },
+    "viewScale": 0.45
+  },
+  {
+    "id": "nova-lite",
+    "name": "Nova Lite",
+    "color": "Sand",
+    "price": 199,
+    "discountPercent": 0,
+    "imageUrl": "/stage/aurora-x7.png",
+    "thumbnail": "/thumbs/aurora-x7.png",
+    "spec": "Photo preview · image mode",
+    "viewOffsetY": -0.2,
+    "attachPoints": { "strapLug": [0, 0, 0], "lensFront": [0, 0, 0] },
+    "viewScale": 1
+  }
+]

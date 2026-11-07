@@ -1,0 +1,84 @@
+- generic [ref=f193e3]:
+  - banner:
+    - generic: Mirage.
+  - navigation "Progress" [ref=f193e4]:
+    - generic [ref=f193e7]:
+      - generic [ref=f193e8]: Stage
+      - generic [ref=f193e12]: Camera
+      - generic [ref=f193e16]: Kit
+      - generic [ref=f193e20]: Review
+      - generic [ref=f193e24]: Sent
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - paragraph: Your kit
+          - heading "Woven Shoulder Strap" [level=2]
+          - paragraph: 1 item in your kit
+        - button "Back" [ref=f193e208]
+      - button "24MP Full-Frame Sensor" [ref=f193e212]
+    - generic:
+      - generic:
+        - generic [ref=f193e218]:
+          - generic [ref=f193e219]:
+            - generic [ref=f193e220]: $348.50
+            - generic [ref=f193e279]: "2"
+          - generic [ref=f193e227]:
+            - generic [ref=f193e228]: $439.00
+            - generic [ref=f193e229]: You save $61.50
+          - generic [ref=f193e230]: Kit $29.00
+        - generic [ref=f193e281]:
+          - button "Leather Wrist Keychain" [ref=f193e282] [cursor=pointer]:
+            - generic [ref=f193e284]: $19.00
+          - button "Locking Lens Cap" [ref=f193e286] [cursor=pointer]:
+            - generic [ref=f193e288]: $12.00
+          - button "Woven Shoulder Strap" [ref=f193e290] [cursor=pointer]:
+            - generic [ref=f193e291]: ×1
+            - generic [ref=f193e293]: $29.00
+          - button "Vintage Leather Backpack" [ref=f193e295] [cursor=pointer]:
+            - generic [ref=f193e297]: $149.00
+        - generic [ref=f193e256]:
+          - generic [ref=f193e258]:
+            - generic [aria-hidden] [ref=f193e299]: Woven Shoulder Strap
+            - generic [ref=f193e259]:
+              - button "Decrease quantity" [ref=f193e260]
+              - generic [ref=f193e262]: "1"
+              - button "Increase quantity" [ref=f193e263]
+          - button "Continue" [active] [ref=f193e267]
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - paragraph: Your kit
+          - heading "Woven Shoulder Strap" [level=2]
+          - paragraph: 1 item in your kit
+        - button "Back" [ref=f193e300]
+      - button "24MP Full-Frame Sensor" [ref=f193e304]
+    - generic:
+      - generic:
+        - generic [ref=f193e310]:
+          - generic [ref=f193e311]:
+            - generic [ref=f193e312]: $348.50
+            - generic [ref=f193e318]: "2"
+          - generic [ref=f193e319]:
+            - generic [ref=f193e320]: $439.00
+            - generic [ref=f193e321]: You save $61.50
+          - generic [ref=f193e322]: Kit $29.00
+        - generic [ref=f193e325]:
+          - button "Leather Wrist Keychain" [ref=f193e326] [cursor=pointer]:
+            - generic [ref=f193e328]: $19.00
+          - button "Locking Lens Cap" [ref=f193e330] [cursor=pointer]:
+            - generic [ref=f193e332]: $12.00
+          - button "Woven Shoulder Strap" [ref=f193e334] [cursor=pointer]:
+            - generic [ref=f193e335]: ×1
+            - generic [ref=f193e337]: $29.00
+          - button "Vintage Leather Backpack" [ref=f193e339] [cursor=pointer]:
+            - generic [ref=f193e341]: $149.00
+        - generic [ref=f193e343]:
+          - generic [ref=f193e345]:
+            - generic [aria-hidden] [ref=f193e346]: Woven Shoulder Strap
+            - generic [ref=f193e347]:
+              - button "Decrease quantity" [ref=f193e348]
+              - generic [ref=f193e350]: "1"
+              - button "Increase quantity" [ref=f193e351]
+          - button "Continue" [ref=f193e355]

@@ -1,0 +1,46 @@
+- generic [ref=f75e3]:
+  - banner:
+    - generic: Mirage.
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - paragraph: The body
+          - heading "Vela Pro" [level=2]
+          - paragraph: Gunmetal
+        - button "Back" [ref=f75e30]
+      - button "33MP Stacked CMOS · 8K" [ref=f75e87]
+    - generic:
+      - generic:
+        - generic [ref=f75e41]:
+          - generic [ref=f75e42]:
+            - generic [ref=f75e43]: Your price
+            - generic [ref=f75e44]: −10%
+          - generic [ref=f75e45]: $700.71
+          - generic [ref=f75e47]:
+            - generic [ref=f75e48]: $920.00
+            - generic [ref=f75e49]: You save $92.00
+        - tablist "Camera models" [ref=f75e51]:
+          - tab "Aurora X7 Matte Black" [ref=f75e52] [cursor=pointer]:
+            - generic [ref=f75e54]: −15%
+            - generic [ref=f75e56]: "01"
+            - generic [ref=f75e57]: $410.00
+          - tab "Vela Pro Gunmetal" [selected] [ref=f75e59] [cursor=pointer]:
+            - generic [ref=f75e60]:
+              - generic [ref=f75e61]: −10%
+              - generic [ref=f75e89]: ×2
+            - generic [ref=f75e62]: "02"
+            - generic [ref=f75e63]: $460.00
+          - tab "Drift Mini Charcoal" [ref=f75e65] [cursor=pointer]:
+            - generic [ref=f75e66]: −15%
+            - generic [ref=f75e68]: "03"
+            - generic [ref=f75e69]: $280.00
+          - tab "Nova Lite Sand" [ref=f75e71] [cursor=pointer]:
+            - generic [ref=f75e72]: "04"
+            - generic [ref=f75e73]: $199.00
+        - generic [ref=f75e75]:
+          - generic [ref=f75e76]:
+            - button "Decrease quantity" [ref=f75e77]
+            - generic [ref=f75e79]: "2"
+            - button "Increase quantity" [active] [ref=f75e80]
+          - button "Continue" [ref=f75e84]
